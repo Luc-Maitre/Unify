@@ -1,0 +1,15 @@
+# Node
+*.log
+*.log.*
+node_modules
+
+out/
+dist/
+code.js
+ui.html
+
+# OS
+.DS_Store
+
+# Claude Code
+.claude/

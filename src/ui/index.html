@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!-- inject:css -->
+</head>
+<body>
+
+<header>
+  <h1>Unify</h1>
+  <nav class="nav-tabs">
+    <button class="nav-tab active" data-tab="transition">Transition de composants</button>
+    <button class="nav-tab" data-tab="feature">Feature X</button>
+  </nav>
+</header>
+
+<div class="main">
+
+  <!-- Tab: Transition de composants -->
+  <div id="panel-transition">
+
+    <div>
+      <div class="section-label">Migration</div>
+      <div class="migration-list" id="migration-list">
+        <div style="color:var(--muted);font-size:11px;">Chargement…</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="section-label">Périmètre</div>
+      <div class="scope-row">
+        <button class="scope-btn active" id="btn-page">Tout le document</button>
+        <button class="scope-btn" id="btn-selection">Sélection</button>
+      </div>
+    </div>
+
+    <button class="btn-primary" id="btn-scan" disabled>Analyser</button>
+
+    <div id="report" class="hidden">
+      <div id="target-warning" class="warning hidden">
+        ⚠️ Composant cible introuvable dans le document — vérifiez la config.
+      </div>
+
+      <div class="report-header" style="margin-top:4px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="color:var(--muted);font-size:11px;">Instances trouvées</span>
+          <span class="badge" id="count-badge">0</span>
+        </div>
+        <label class="select-all-row">
+          <input type="checkbox" id="select-all" checked />
+          Tout sélectionner
+        </label>
+      </div>
+
+      <div style="margin-top:10px;">
+        <div id="instance-list" class="instance-list"></div>
+        <div id="empty-state" class="empty-state hidden">
+          Aucune instance trouvée.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Tab: Feature -->
+  <div id="panel-feature" class="hidden">Soon.</div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<footer>
+  <button class="btn-ghost" id="btn-cancel">Fermer</button>
+  <button class="btn-execute hidden" id="btn-execute" disabled>Appliquer</button>
+</footer>
+
+<!-- inject:js -->
+</body>
+</html>
