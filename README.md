@@ -1,40 +1,40 @@
-Below are the steps to get your plugin running. You can also find instructions at:
+# Unify — Plugin Figma
 
-  https://www.figma.com/plugin-docs/plugin-quickstart-guide/
+Plugin compagnon pour les **product designers**, conçu pour faciliter la conception de maquettes sur Figma.
 
-This plugin template uses Typescript and NPM, two standard tools in creating JavaScript applications.
+## Objectif
 
-First, download Node.js which comes with NPM. This will allow you to install TypeScript and other
-libraries. You can find the download link here:
+Unify accompagne les designers :
 
-  https://nodejs.org/en/download/
+- **Transition de rebranding** — détecte les instances de composants obsolètes et les remplace par les nouveaux composants de la bibliothèque cible, en masse ou sur une sélection.
+- **Application des guidelines UI** — aide à respecter les règles et bonnes pratiques du design system au fil de la conception.
 
-Next, install TypeScript using the command:
+## Prérequis
 
-  npm install -g typescript
+- [Node.js](https://nodejs.org/) (inclut npm)
 
-Finally, in the directory of your plugin, get the latest type definitions for the plugin API by running:
+## Installation
 
-  npm install --save-dev @figma/plugin-typings
+```bash
+npm install
+```
 
-If you are familiar with JavaScript, TypeScript will look very familiar. In fact, valid JavaScript code
-is already valid Typescript code.
+## Développement
 
-TypeScript adds type annotations to variables. This allows code editors such as Visual Studio Code
-to provide information about the Figma API while you are writing code, as well as help catch bugs
-you previously didn't notice.
+```bash
+npm run watch
+```
 
-For more information, visit https://www.typescriptlang.org/
+Le plugin se recompile automatiquement à chaque sauvegarde.
 
-Using TypeScript requires a compiler to convert TypeScript (code.ts) into JavaScript (code.js)
-for the browser to run.
+## Build production
 
-We recommend writing TypeScript code using Visual Studio code:
+```bash
+npm run build
+```
 
-1. Download Visual Studio Code if you haven't already: https://code.visualstudio.com/.
-2. Open this directory in Visual Studio Code.
-3. Compile TypeScript to JavaScript: Run the "Terminal > Run Build Task..." menu item,
-    then select "npm: watch". You will have to do this again every time
-    you reopen Visual Studio Code.
+## Chargement dans Figma
 
-That's it! Visual Studio Code will regenerate the JavaScript file every time you save.
+1. Ouvrir Figma Desktop
+2. Menu **Plugins > Development > Import plugin from manifest...**
+3. Sélectionner le fichier `manifest.json` à la racine du projet
