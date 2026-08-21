@@ -6,6 +6,8 @@ export interface InstanceInfo {
   pageName: string;
   parentName: string;
   properties: Record<string, string>;
+  targetComponentKey: string;
+  mappedProperties: Record<string, string>;
 }
 
 export function getPropertyValue(node: InstanceNode, namePrefix: string): string | null {
@@ -58,12 +60,16 @@ export async function findDeprecatedInstances(
           node.parent && 'name' in node.parent ? (node.parent as { name: string }).name : '—';
 
         const properties: Record<string, string> = {};
+        const mappedProperties: Record<string, string> = {};
         for (const mapping of pair.propertyMappings) {
           const val = getPropertyValue(node, mapping.from);
-          if (val !== null) properties[mapping.from] = val;
+          if (val !== null) {
+            properties[mapping.from] = val;
+            mappedProperties[mapping.to] = val;
+          }
         }
 
-        results.push({ id: node.id, name: node.name, pageName, parentName, properties });
+        results.push({ id: node.id, name: node.name, pageName, parentName, properties, targetComponentKey: pair.targetComponentKey, mappedProperties });
       }
     }
     if ('children' in node) {

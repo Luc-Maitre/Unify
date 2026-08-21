@@ -8,10 +8,11 @@
 <body>
 
 <header>
-  <h1>Unify</h1>
   <nav class="nav-tabs">
     <button class="nav-tab active" data-tab="transition">Transition de composants</button>
     <button class="nav-tab" data-tab="feature">Feature X</button>
+    <!-- [DEV] UI Kit tab — delete this line and #panel-uikit block below when done -->
+    <button class="nav-tab uikit-tab" data-tab="uikit">UI Kit</button>
   </nav>
 </header>
 
@@ -61,12 +62,175 @@
           Aucune instance trouvée.
         </div>
       </div>
+
+      <div class="instance-preview hidden" id="instance-preview">
+        <div class="preview-empty" id="preview-empty">Survolez une instance pour la prévisualiser</div>
+        <div class="preview-cols hidden" id="preview-cols">
+          <div class="preview-col">
+            <div class="preview-col-label">Avant</div>
+            <div class="preview-col-img-wrap">
+              <img id="preview-before-img" src="" alt="" class="hidden" />
+              <span class="preview-spinner hidden" id="preview-before-loading"></span>
+            </div>
+          </div>
+          <div class="preview-sep"></div>
+          <div class="preview-col">
+            <div class="preview-col-label">Après</div>
+            <div class="preview-col-img-wrap">
+              <img id="preview-after-img" src="" alt="" class="hidden" />
+              <span class="preview-spinner hidden" id="preview-after-loading"></span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
   </div>
 
   <!-- Tab: Feature -->
   <div id="panel-feature" class="hidden">Soon.</div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       [DEV] UI Kit — suppression : retirer ce bloc + le bouton nav
+       ═══════════════════════════════════════════════════════════════ -->
+  <div id="panel-uikit" class="hidden uikit-panel">
+
+    <!-- Typographie & couleurs -->
+    <div class="uikit-section">
+      <div class="uikit-section-title">Typographie</div>
+      <div class="uikit-row">
+        <span class="section-label">Section label</span>
+        <span style="font-size:14px;font-weight:600;">Heading 14/600</span>
+        <span style="font-size:12px;font-weight:500;">Body 12/500</span>
+        <span style="font-size:11px;color:var(--muted);">Meta 11 muted</span>
+        <span style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);">LABEL 10</span>
+      </div>
+    </div>
+
+    <!-- Boutons -->
+    <div class="uikit-section">
+      <div class="uikit-section-title">Boutons</div>
+      <div class="uikit-row uikit-wrap">
+        <button class="btn-primary" style="width:auto;padding:10px 20px;">Analyser</button>
+        <button class="btn-primary" style="width:auto;padding:10px 20px;" disabled>Désactivé</button>
+        <button class="btn-execute" style="flex:none;padding:9px 20px;">Appliquer (3 swaps)</button>
+        <button class="btn-ghost" style="flex:none;padding:9px 16px;">Fermer</button>
+      </div>
+      <div class="uikit-row uikit-wrap" style="margin-top:8px;">
+        <button class="scope-btn active">Tout le document</button>
+        <button class="scope-btn">Sélection</button>
+      </div>
+    </div>
+
+    <!-- Badges & tags -->
+    <div class="uikit-section">
+      <div class="uikit-section-title">Badges &amp; Tags</div>
+      <div class="uikit-row uikit-wrap">
+        <span class="badge">0</span>
+        <span class="badge">12</span>
+        <span class="soon-badge">Bientôt</span>
+        <span class="prop-tag">appearance: primary</span>
+        <span class="prop-tag">size: md</span>
+      </div>
+    </div>
+
+    <!-- Migration items -->
+    <div class="uikit-section">
+      <div class="uikit-section-title">Migration items</div>
+      <div class="migration-list" style="pointer-events:none;">
+        <label class="migration-item active">
+          <input type="radio" name="uikit-migration" checked />
+          <span class="migration-label">Buttons &amp; Icon Buttons</span>
+        </label>
+        <label class="migration-item">
+          <input type="radio" name="uikit-migration" />
+          <span class="migration-label">Tags</span>
+          <span class="soon-badge">Bientôt</span>
+        </label>
+        <label class="migration-item disabled">
+          <input type="radio" name="uikit-migration" disabled />
+          <span class="migration-label">Chips</span>
+          <span class="soon-badge">Bientôt</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Instance items -->
+    <div class="uikit-section">
+      <div class="uikit-section-title">Instance items</div>
+      <div class="instance-list" style="max-height:none;pointer-events:none;">
+        <label class="instance-item">
+          <input type="checkbox" class="inst-checkbox" checked />
+          <div class="instance-info">
+            <div class="instance-name">Button / Primary</div>
+            <div class="instance-meta">Page 1 · Hero Section</div>
+          </div>
+          <div class="prop-tags">
+            <span class="prop-tag">appearance: primary</span>
+          </div>
+        </label>
+        <label class="instance-item">
+          <input type="checkbox" class="inst-checkbox" />
+          <div class="instance-info">
+            <div class="instance-name">Button / Secondary — long name that truncates here</div>
+            <div class="instance-meta">Page 2 · Footer</div>
+          </div>
+          <div class="prop-tags">
+            <span class="prop-tag">appearance: secondary</span>
+            <span class="prop-tag">size: sm</span>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <!-- États feedback -->
+    <div class="uikit-section">
+      <div class="uikit-section-title">Feedback</div>
+      <div class="warning">⚠️ Composant cible introuvable dans le document — vérifiez la config.</div>
+      <div style="margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+        <div class="toast success" style="position:static;opacity:1;transform:none;pointer-events:none;">
+          3 swaps effectués ✓
+        </div>
+        <div class="toast error" style="position:static;opacity:1;transform:none;pointer-events:none;">
+          2 swaps OK · 1 échec
+        </div>
+      </div>
+      <div class="empty-state" style="margin-top:8px;">Aucune instance trouvée.</div>
+    </div>
+
+    <!-- Preview pane avant/après -->
+    <div class="uikit-section">
+      <div class="uikit-section-title">Preview avant / après</div>
+      <div class="instance-preview" style="display:flex;">
+        <div class="preview-empty">Survolez une instance pour la prévisualiser</div>
+      </div>
+      <div class="instance-preview" style="display:flex;margin-top:6px;">
+        <div class="preview-cols" style="display:flex;">
+          <div class="preview-col">
+            <div class="preview-col-label">Avant</div>
+            <div class="preview-col-img-wrap"><span class="preview-spinner"></span></div>
+          </div>
+          <div class="preview-sep"></div>
+          <div class="preview-col">
+            <div class="preview-col-label">Après</div>
+            <div class="preview-col-img-wrap"><span class="preview-spinner"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Spinner -->
+    <div class="uikit-section">
+      <div class="uikit-section-title">Spinner</div>
+      <div class="uikit-row" style="gap:16px;align-items:center;">
+        <span class="spinner" style="border-top-color:#fff;"></span>
+        <span class="preview-spinner"></span>
+        <span style="font-size:11px;color:var(--muted);">Dans bouton : .spinner / Dans preview : .preview-spinner</span>
+      </div>
+    </div>
+
+  </div>
+  <!-- ═══════════════════════════════ [/DEV] UI Kit ═══════════════ -->
 
 </div>
 

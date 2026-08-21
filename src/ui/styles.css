@@ -20,7 +20,7 @@ body {
   color: var(--text);
   font-size: 12px;
   line-height: 1.5;
-  height: 600px;
+  height: 100vh;
   display: flex;
   flex-direction: column;
 }
@@ -71,6 +71,7 @@ header h1 {
 
 .main {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
   padding: 16px;
   display: flex;
@@ -361,6 +362,113 @@ footer {
 }
 
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Instance preview ────────────────────────── */
+
+.instance-preview {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-top: 8px;
+  min-height: 110px;
+  transition: border-color 0.15s;
+}
+
+.preview-empty {
+  color: var(--muted);
+  font-size: 11px;
+  padding: 16px;
+}
+
+.preview-cols {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.preview-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.preview-col-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--muted);
+  padding: 8px 10px 4px;
+}
+
+.preview-col-img-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px 8px;
+  min-height: 80px;
+}
+
+.preview-col-img-wrap img {
+  max-width: 100%;
+  max-height: 80px;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.preview-sep {
+  width: 1px;
+  background: var(--border);
+  margin: 8px 0;
+  flex-shrink: 0;
+}
+
+.preview-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.1);
+  border-top-color: var(--muted);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+/* ── [DEV] UI Kit — supprimer avec #panel-uikit ─ */
+
+.uikit-tab { color: #ff79c6 !important; }
+.uikit-tab.active { border-bottom-color: #ff79c6 !important; }
+
+.uikit-panel { gap: 24px; }
+
+.uikit-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.uikit-section-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: #ff79c6;
+  border-bottom: 1px solid rgba(255,121,198,.2);
+  padding-bottom: 4px;
+}
+
+.uikit-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.uikit-wrap { flex-wrap: wrap; }
 
 /* ── Utilities ───────────────────────────────── */
 

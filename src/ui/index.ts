@@ -10,6 +10,8 @@ interface InstanceInfo {
   pageName: string;
   parentName: string;
   properties: Record<string, string>;
+  targetComponentKey: string;
+  mappedProperties: Record<string, string>;
 }
 
 let scope: 'document' | 'selection' = 'document';
@@ -30,6 +32,18 @@ const countBadge     = document.getElementById('count-badge')!;
 const selectAll      = document.getElementById('select-all')! as HTMLInputElement;
 const toast          = document.getElementById('toast')!;
 const targetWarning  = document.getElementById('target-warning')!;
+const instancePreview   = document.getElementById('instance-preview')!;
+const previewEmpty      = document.getElementById('preview-empty')!;
+const previewCols       = document.getElementById('preview-cols')!;
+const previewBeforeImg  = document.getElementById('preview-before-img')! as HTMLImageElement;
+const previewAfterImg   = document.getElementById('preview-after-img')! as HTMLImageElement;
+const previewBeforeLoad = document.getElementById('preview-before-loading')!;
+const previewAfterLoad  = document.getElementById('preview-after-loading')!;
+
+const beforeCache = new Map<string, string | null>(); // nodeId → data URL
+const afterCache  = new Map<string, string | null>(); // nodeId → data URL
+let pendingPreviewId: string | null = null;
+let hoverDebounce: ReturnType<typeof setTimeout> | null = null;
 
 // ── Tab navigation ────────────────────────────
 
@@ -64,6 +78,11 @@ btnScan.onclick = () => {
   btnScan.disabled = true;
   report.classList.add('hidden');
   btnExecute.classList.add('hidden');
+  beforeCache.forEach(url => { if (url) URL.revokeObjectURL(url); });
+  afterCache.forEach(url => { if (url) URL.revokeObjectURL(url); });
+  beforeCache.clear();
+  afterCache.clear();
+  hidePreviewPane();
   parent.postMessage({ pluginMessage: { type: 'scan', migrationId: currentMigrationId, scope } }, '*');
 };
 
@@ -89,6 +108,57 @@ selectAll.onchange = () => {
   });
   updateExecuteBtn();
 };
+
+// ── Preview ───────────────────────────────────
+
+function setColImage(img: HTMLImageElement, spinner: HTMLElement, url: string | null | undefined) {
+  if (url) {
+    img.src = url;
+    img.classList.remove('hidden');
+    spinner.classList.add('hidden');
+  } else if (url === null) {
+    img.classList.add('hidden');
+    spinner.classList.add('hidden');
+  } else {
+    img.classList.add('hidden');
+    spinner.classList.remove('hidden');
+  }
+}
+
+function showPreviewPane(nodeId: string, targetComponentKey: string, mappedProperties: Record<string, string>) {
+  if (hoverDebounce) clearTimeout(hoverDebounce);
+  hoverDebounce = setTimeout(() => {
+    pendingPreviewId = nodeId;
+    instancePreview.classList.remove('hidden');
+    previewEmpty.classList.add('hidden');
+    previewCols.classList.remove('hidden');
+
+    const cachedBefore = beforeCache.has(nodeId) ? beforeCache.get(nodeId) : undefined;
+    const cachedAfter  = afterCache.has(nodeId) ? afterCache.get(nodeId) : undefined;
+
+    setColImage(previewBeforeImg, previewBeforeLoad, cachedBefore);
+    setColImage(previewAfterImg, previewAfterLoad, cachedAfter);
+
+    if (cachedBefore === undefined || cachedAfter === undefined) {
+      parent.postMessage({ pluginMessage: { type: 'preview-request', nodeId, targetComponentKey, mappedProperties } }, '*');
+    }
+  }, 120);
+}
+
+function hidePreviewPane() {
+  if (hoverDebounce) clearTimeout(hoverDebounce);
+  pendingPreviewId = null;
+  instancePreview.classList.add('hidden');
+  previewCols.classList.add('hidden');
+  previewBeforeImg.src = '';
+  previewAfterImg.src = '';
+  previewBeforeImg.classList.add('hidden');
+  previewAfterImg.classList.add('hidden');
+  previewBeforeLoad.classList.add('hidden');
+  previewAfterLoad.classList.add('hidden');
+  previewEmpty.textContent = 'Survolez une instance pour la prévisualiser';
+  previewEmpty.classList.remove('hidden');
+}
 
 // ── Helpers ───────────────────────────────────
 
@@ -150,6 +220,7 @@ function renderMigrations(migrations: MigrationMeta[]) {
 
 function renderInstances(list: InstanceInfo[]) {
   instanceList.innerHTML = '';
+  instanceList.onmouseleave = () => hidePreviewPane();
 
   if (list.length === 0) {
     emptyState.classList.remove('hidden');
@@ -184,6 +255,8 @@ function renderInstances(list: InstanceInfo[]) {
       <div class="instance-name">${inst.name}</div>
       <div class="instance-meta">${inst.pageName} · ${inst.parentName}</div>
     `;
+
+    item.addEventListener('mouseenter', () => showPreviewPane(inst.id, inst.targetComponentKey, inst.mappedProperties));
 
     item.appendChild(cb);
     item.appendChild(info);
@@ -251,6 +324,27 @@ window.onmessage = (event: MessageEvent) => {
     } else {
       btnExecute.disabled = false;
       updateExecuteBtn();
+    }
+  }
+
+  if (msg.type === 'preview-result') {
+    const { nodeId, beforeBytes, afterBytes } = msg;
+
+    const toUrl = (bytes: number[] | null): string | null => {
+      if (!bytes) return null;
+      const blob = new Blob([new Uint8Array(bytes)], { type: 'image/png' });
+      return URL.createObjectURL(blob);
+    };
+
+    const beforeUrl = toUrl(beforeBytes);
+    const afterUrl  = toUrl(afterBytes);
+
+    beforeCache.set(nodeId, beforeUrl);
+    afterCache.set(nodeId, afterUrl);
+
+    if (pendingPreviewId === nodeId) {
+      setColImage(previewBeforeImg, previewBeforeLoad, beforeUrl);
+      setColImage(previewAfterImg, previewAfterLoad, afterUrl);
     }
   }
 
