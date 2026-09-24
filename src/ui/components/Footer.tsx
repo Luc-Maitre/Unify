@@ -1,0 +1,22 @@
+interface Props {
+  onSettings: () => void;
+}
+
+export function Footer({ onSettings }: Props) {
+  return (
+    <footer id="footer-home">
+      <div class="footer-brand">
+        <div class="footer-logo" aria-hidden="true">
+          <div class="flogo-bar" />
+          <div class="flogo-dot-orange" />
+          <div class="flogo-dot-white" />
+        </div>
+        <span class="footer-brand-name">Leboncoin plugin</span>
+      </div>
+      <div class="footer-meta">
+        <button class="footer-settings-btn" onClick={onSettings}>Paramètres</button>
+        <span class="footer-version">V.1.1</span>
+      </div>
+    </footer>
+  );
+}

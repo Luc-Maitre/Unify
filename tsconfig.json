@@ -5,6 +5,8 @@
     "strict": true,
     "module": "commonjs",
     "esModuleInterop": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
     "typeRoots": [
       "./node_modules/@types",
       "./node_modules/@figma"

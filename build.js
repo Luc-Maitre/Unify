@@ -5,16 +5,19 @@ const watch = process.argv.includes('--watch');
 
 async function buildUI() {
   const jsResult = await esbuild.build({
-    entryPoints: ['src/ui/index.ts'],
+    entryPoints: ['src/ui/index.tsx'],
     bundle: true,
     write: false,
     target: 'es2020',
+    jsx: 'automatic',
+    jsxImportSource: 'preact',
   });
 
   const cssResult = await esbuild.build({
     entryPoints: ['src/ui/styles.css'],
     bundle: true,
     write: false,
+    loader: { '.woff2': 'dataurl', '.woff': 'dataurl' },
   });
 
   const js = jsResult.outputFiles[0].text;
