@@ -3,7 +3,7 @@ import type { MigrationMeta, InstanceInfo, ActionBarConfig } from '../types';
 
 interface Props {
   onActionBar: (config: ActionBarConfig) => void;
-  onToast: (msg: string, type: 'success' | 'error') => void;
+  onToast: (title: string, variant: 'success' | 'error' | 'warning') => void;
 }
 
 interface PreviewDisplay {

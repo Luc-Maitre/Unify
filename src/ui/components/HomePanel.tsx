@@ -1,5 +1,6 @@
 import { useState } from 'preact/hooks';
 import { TOOLS } from '../tools';
+import { AwarenessBanner } from './AwarenessBanner';
 import { ToolCard } from './ToolCard';
 
 const FILTERS = [
@@ -24,19 +25,17 @@ export function HomePanel({ onNavigate }: Props) {
     <div class="home-panel">
       <section class="home-section">
         <p class="home-label">WHAT'S UP ?</p>
-        <div class="awareness-card">
-          <div class="awareness-pastille">
+        <AwarenessBanner
+          title="T'es pas prêt !"
+          description="Super news hyper incroyable qui va faire votre année entière !"
+          icon={
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
               <path d="M5 13H10L20 7V25L10 19H5V13Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
               <path d="M10 19V26" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
               <path d="M23 11C25.2 12.4 27 14.5 27 17C27 19.5 25.2 21.6 23 23" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
             </svg>
-          </div>
-          <div class="awareness-content">
-            <p class="awareness-title">T'es pas prêt !</p>
-            <p class="awareness-body">Super news hyper incroyable qui va faire votre année entière !</p>
-          </div>
-        </div>
+          }
+        />
       </section>
 
       <section class="home-section">

@@ -5,11 +5,12 @@ import { TransitionPanel } from './components/TransitionPanel';
 import { UiKitPanel } from './components/UiKitPanel';
 import { ToolNavbar } from './components/ToolNavbar';
 import { Footer } from './components/Footer';
-import { ActionBar } from './components/ActionBar';
+import { ActionBarLegacy } from './components/ActionBarLegacy';
+import { Feedback } from './components/Feedback';
 
 interface ToastState {
-  msg: string;
-  type: 'success' | 'error';
+  title: string;
+  variant: 'success' | 'error' | 'warning';
 }
 
 export function App() {
@@ -19,9 +20,9 @@ export function App() {
   const [actionBar, setActionBar] = useState<ActionBarConfig | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const showToast = useCallback((msg: string, type: 'success' | 'error') => {
+  const showToast = useCallback((title: string, variant: 'success' | 'error' | 'warning') => {
     if (toastTimer.current) clearTimeout(toastTimer.current);
-    setToast({ msg, type });
+    setToast({ title, variant });
     toastTimer.current = setTimeout(() => setToast(null), 3500);
   }, []);
 
@@ -50,15 +51,20 @@ export function App() {
         {panel === 'uikit' && <UiKitPanel />}
       </div>
       {!isHome && actionBar && (
-        <ActionBar
+        <ActionBarLegacy
           label={actionBar.label}
           disabled={actionBar.disabled}
           loading={actionBar.loading}
           onClick={actionBar.onClick}
         />
+
       )}
       <Footer onUiKit={() => navigateTo('uikit', 'UI Kit')} />
-      {toast && <div class={`toast ${toast.type} visible`}>{toast.msg}</div>}
+      {toast && (
+        <div class="toast visible">
+          <Feedback variant={toast.variant} title={toast.title} />
+        </div>
+      )}
     </>
   );
 }

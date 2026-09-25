@@ -1,4 +1,6 @@
 import type { Tool } from '../tools';
+import { IconContainer } from './IconContainer';
+import { Tag } from './Tag';
 
 interface Props {
   tool: Tool;
@@ -19,20 +21,20 @@ export function ToolCard({ tool, onNavigate }: Props) {
     >
       <div class="tool-card-content">
         <div class="tool-card-header">
-          <div class="tool-pastille">
+          <IconContainer size="medium">
             <svg
               width="16" height="16" viewBox="0 0 16 16" fill="none"
               dangerouslySetInnerHTML={{ __html: tool.iconPaths }}
             />
-          </div>
+          </IconContainer>
           <span class="tool-card-title">{tool.title}</span>
-          {tool.status === 'new' && <span class="tag-new">NOUVEAU</span>}
-          {tool.status === 'disabled' && <span class="tag-soon">BIENTÔT</span>}
+          {tool.status === 'new' && <Tag variant="new">NOUVEAU</Tag>}
+          {tool.status === 'disabled' && <Tag variant="tertiary">BIENTÔT</Tag>}
         </div>
         <p class="tool-card-desc">{tool.desc}</p>
       </div>
       <div class="tool-card-tags">
-        <span class="tag-category">{tool.category}</span>
+        <Tag variant="default">{tool.category}</Tag>
       </div>
     </div>
   );

@@ -1,4 +1,13 @@
 import logoMotion from '../assets/logo-motion.svg';
+import { ActionBar } from './ActionBar';
+import { Badge } from './Badge';
+import { Button } from './Button';
+import { Feedback } from './Feedback';
+import { IconContainer } from './IconContainer';
+import { Stepper } from './Stepper';
+import { Tag } from './Tag';
+import { Checkbox } from './Checkbox';
+import { Radio } from './Radio';
 
 export function UiKitPanel() {
   return (
@@ -21,14 +30,49 @@ export function UiKitPanel() {
       <div class="uikit-section">
         <div class="uikit-section-title">Boutons</div>
         <div class="uikit-row uikit-wrap">
-          <button class="btn-primary" style={{ width: 'auto', padding: '10px 20px' }}>Analyser</button>
-          <button class="btn-primary" style={{ width: 'auto', padding: '10px 20px' }} disabled>Désactivé</button>
-          <button class="btn-action" style={{ flex: 'none', height: '44px', padding: '0 24px' }}>Appliquer (3 swaps)</button>
-          <button class="btn-ghost" style={{ flex: 'none', padding: '9px 16px' }}>Retour</button>
+          <Button appearance="primary">Primary</Button>
+          <Button appearance="secondary">Secondary</Button>
+          <Button appearance="tertiary">Tertiary</Button>
+        </div>
+        <div class="uikit-row uikit-wrap" style={{ marginTop: '8px' }}>
+          <Button appearance="primary" disabled>Désactivé</Button>
+          <Button appearance="secondary" disabled>Désactivé</Button>
+          <Button appearance="tertiary" disabled>Désactivé</Button>
         </div>
         <div class="uikit-row uikit-wrap" style={{ marginTop: '8px' }}>
           <button class="scope-btn active" style={{ flex: 'none', width: 'auto', padding: '8px 16px' }}>Tout le document</button>
           <button class="scope-btn" style={{ flex: 'none', width: 'auto', padding: '8px 16px' }}>Sélection</button>
+        </div>
+      </div>
+
+      <div class="uikit-section">
+        <div class="uikit-section-title">Sticky bar</div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', margin: '0 -16px' }}>
+          <ActionBar primaryLabel="Appliquer" onPrimary={() => {}} />
+          <ActionBar
+            primaryLabel="Appliquer"
+            onPrimary={() => {}}
+            secondaryLabel="Annuler"
+            onSecondary={() => {}}
+          />
+        </div>
+      </div>
+
+      <div class="uikit-section">
+        <div class="uikit-section-title">Checkbox</div>
+        <div class="uikit-row" style={{ gap: '16px', alignItems: 'center' }}>
+          <Checkbox />
+          <Checkbox checked />
+          <Checkbox disabled />
+        </div>
+      </div>
+
+      <div class="uikit-section">
+        <div class="uikit-section-title">Radio</div>
+        <div class="uikit-row" style={{ gap: '16px', alignItems: 'center' }}>
+          <Radio name="uikit-radio" />
+          <Radio name="uikit-radio" checked />
+          <Radio name="uikit-radio" disabled />
         </div>
       </div>
 
@@ -44,11 +88,13 @@ export function UiKitPanel() {
       <div class="uikit-section">
         <div class="uikit-section-title">Tags & Badges</div>
         <div class="uikit-row uikit-wrap">
-          <span class="badge">0</span>
-          <span class="badge">12</span>
-          <span class="tag-new">NOUVEAU</span>
-          <span class="tag-soon">BIENTÔT</span>
-          <span class="tag-category">QUOTIDIEN</span>
+          <Badge value={0} />
+          <Badge value={12} />
+          <Stepper value={1} />
+          <Stepper value={2} />
+          <Tag variant="new">NOUVEAU</Tag>
+          <Tag variant="tertiary">BIENTÔT</Tag>
+          <Tag variant="default">QUOTIDIEN</Tag>
           <span class="soon-badge">Bientôt</span>
           <span class="prop-tag">appearance: primary</span>
         </div>
@@ -60,35 +106,35 @@ export function UiKitPanel() {
           <div class="tool-card">
             <div class="tool-card-content">
               <div class="tool-card-header">
-                <div class="tool-pastille">
+                <IconContainer size="medium">
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                     <path d="M5 3.5L3 1.5L1 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                     <path d="M3 1.5V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                     <path d="M11 12.5L13 14.5L15 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                     <path d="M13 14.5V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                   </svg>
-                </div>
+                </IconContainer>
                 <span class="tool-card-title">Easy Swap</span>
               </div>
               <p class="tool-card-desc">Description de l'outil.</p>
             </div>
-            <div class="tool-card-tags"><span class="tag-category">QUOTIDIEN</span></div>
+            <div class="tool-card-tags"><Tag variant="default">QUOTIDIEN</Tag></div>
           </div>
           <div class="tool-card disabled">
             <div class="tool-card-content">
               <div class="tool-card-header">
-                <div class="tool-pastille">
+                <IconContainer size="medium">
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                     <rect x="2.5" y="7" width="11" height="7.5" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
                     <path d="M5 7V5C5 3.343 6.343 2 8 2C9.657 2 11 3.343 11 5V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                   </svg>
-                </div>
+                </IconContainer>
                 <span class="tool-card-title">Title</span>
-                <span class="tag-soon">BIENTÔT</span>
+                <Tag variant="tertiary">BIENTÔT</Tag>
               </div>
               <p class="tool-card-desc">Description de l'outil.</p>
             </div>
-            <div class="tool-card-tags"><span class="tag-category">CATÉGORIE</span></div>
+            <div class="tool-card-tags"><Tag variant="default">CATÉGORIE</Tag></div>
           </div>
         </div>
       </div>
@@ -124,12 +170,33 @@ export function UiKitPanel() {
 
       <div class="uikit-section">
         <div class="uikit-section-title">Feedback</div>
-        <div class="warning">⚠️ Composant cible introuvable dans le document — vérifiez la config.</div>
-        <div style={{ marginTop: '8px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-          <div class="toast success" style={{ position: 'static', opacity: 1, transform: 'none', pointerEvents: 'none' }}>3 swaps effectués ✓</div>
-          <div class="toast error" style={{ position: 'static', opacity: 1, transform: 'none', pointerEvents: 'none' }}>2 swaps OK · 1 échec</div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <Feedback variant="success" title="Opération réussie" description="3 swaps effectués avec succès." />
+          <Feedback variant="error" title="Erreur" description="2 swaps OK · 1 échec." />
+          <Feedback variant="warning" title="Attention" description="Composant cible introuvable dans le document." />
         </div>
-        <div class="empty-state" style={{ marginTop: '8px' }}>Aucune instance trouvée.</div>
+      </div>
+
+      <div class="uikit-section">
+        <div class="uikit-section-title">Icon container</div>
+        <div class="uikit-row" style={{ gap: '12px', alignItems: 'center' }}>
+          <IconContainer size="medium">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M5 3.5L3 1.5L1 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M3 1.5V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M11 12.5L13 14.5L15 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M13 14.5V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </IconContainer>
+          <IconContainer size="large">
+            <svg width="32" height="32" viewBox="0 0 16 16" fill="none">
+              <path d="M5 3.5L3 1.5L1 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M3 1.5V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M11 12.5L13 14.5L15 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M13 14.5V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </IconContainer>
+        </div>
       </div>
 
       <div class="uikit-section">
