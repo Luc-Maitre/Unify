@@ -11,6 +11,7 @@ async function buildUI() {
     target: 'es2020',
     jsx: 'automatic',
     jsxImportSource: 'preact',
+    loader: { '.svg': 'dataurl' },
   });
 
   const cssResult = await esbuild.build({

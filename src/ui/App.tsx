@@ -57,7 +57,7 @@ export function App() {
           onClick={actionBar.onClick}
         />
       )}
-      <Footer onSettings={() => navigateTo('uikit', 'UI Kit')} />
+      <Footer onUiKit={() => navigateTo('uikit', 'UI Kit')} />
       {toast && <div class={`toast ${toast.type} visible`}>{toast.msg}</div>}
     </>
   );

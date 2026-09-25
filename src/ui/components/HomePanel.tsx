@@ -17,7 +17,7 @@ export function HomePanel({ onNavigate }: Props) {
   const [filter, setFilter] = useState('all');
 
   const visible = TOOLS.filter(t =>
-    filter === 'all' || t.categories.includes(filter)
+    filter === 'all' || t.categories.some(c => c.toLowerCase() === filter.toLowerCase())
   );
 
   return (

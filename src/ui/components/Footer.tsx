@@ -1,8 +1,8 @@
 interface Props {
-  onSettings: () => void;
+  onUiKit: () => void;
 }
 
-export function Footer({ onSettings }: Props) {
+export function Footer({ onUiKit }: Props) {
   return (
     <footer id="footer-home">
       <div class="footer-brand">
@@ -14,7 +14,7 @@ export function Footer({ onSettings }: Props) {
         <span class="footer-brand-name">Leboncoin plugin</span>
       </div>
       <div class="footer-meta">
-        <button class="footer-settings-btn" onClick={onSettings}>Paramètres</button>
+        <button class="footer-settings-btn" onClick={onUiKit}>UI Kit</button>
         <span class="footer-version">V.1.1</span>
       </div>
     </footer>

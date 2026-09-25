@@ -1,3 +1,5 @@
+import logoMotion from '../assets/logo-motion.svg';
+
 export function UiKitPanel() {
   return (
     <div class="tool-panel">
@@ -128,6 +130,15 @@ export function UiKitPanel() {
           <div class="toast error" style={{ position: 'static', opacity: 1, transform: 'none', pointerEvents: 'none' }}>2 swaps OK · 1 échec</div>
         </div>
         <div class="empty-state" style={{ marginTop: '8px' }}>Aucune instance trouvée.</div>
+      </div>
+
+      <div class="uikit-section">
+        <div class="uikit-section-title">Logo animé</div>
+        <div class="uikit-row" style={{ gap: '24px', alignItems: 'center' }}>
+          <img src={logoMotion} width="24" height="24" alt="Unify logo 24px" />
+          <img src={logoMotion} width="48" height="48" alt="Unify logo 48px" />
+          <img src={logoMotion} width="64" height="64" alt="Unify logo 64px" />
+        </div>
       </div>
 
       <div class="uikit-section">

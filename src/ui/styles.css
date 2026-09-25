@@ -80,7 +80,7 @@
   --font: "LBCDenimINK", system-ui, sans-serif;
 
   /* Text styles */
-  --text-h1-size:      20px; --text-h1-weight:      900;
+  --text-h1-size:      20px; --text-h1-weight:      600;
   --text-h2-size:      18px; --text-h2-weight:      600;
   --text-h3-size:      16px; --text-h3-weight:      600;
   --text-body-hl-size: 14px; --text-body-hl-weight: 600;
@@ -88,6 +88,10 @@
   --text-label-size:   12px; --text-label-weight:   500;
   --text-meta-size:    10px; --text-meta-weight:    400;
   --text-caption-size:  9px; --text-caption-weight: 500;
+
+  /* Opacity */
+  --opacity-disabled: 0.4;
+  --opacity-muted:    0.72;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -144,7 +148,7 @@ body {
   font-size: var(--text-label-size);
   font-weight: var(--text-label-weight);
   color: var(--color-text);
-  opacity: 0.72;
+  opacity: var(--opacity-muted);
   letter-spacing: 0.04em;
 }
 
@@ -263,7 +267,7 @@ body {
 
 .tool-card.disabled {
   cursor: not-allowed;
-  opacity: 0.4;
+  opacity: var(--opacity-disabled);
 }
 
 .tool-card-content {
@@ -288,7 +292,7 @@ body {
   flex-shrink: 0;
   background: rgba(6, 214, 160, 0.16);
   border-radius: var(--radius-md);
-  color: var(--color-primary);
+  color: var(--color-icon);
 }
 
 .tool-card-title {
@@ -394,7 +398,7 @@ body {
 
 .migration-item:not(.disabled):hover { border-color: var(--color-border-hl); }
 .migration-item.active { border-color: var(--color-primary); background: rgba(6, 214, 160, 0.08); }
-.migration-item.disabled { opacity: 0.4; cursor: not-allowed; }
+.migration-item.disabled { opacity: var(--opacity-disabled); cursor: not-allowed; }
 
 .migration-item input[type="radio"] { accent-color: var(--color-primary); flex-shrink: 0; cursor: pointer; }
 .migration-label { font-size: var(--text-label-size); font-weight: var(--text-label-weight); }
@@ -498,7 +502,7 @@ body {
 }
 
 .btn-action:hover { opacity: 0.88; }
-.btn-action:disabled { opacity: 0.4; cursor: default; }
+.btn-action:disabled { opacity: var(--opacity-disabled); cursor: default; }
 
 /* ── Buttons ─────────────────────────────────── */
 
@@ -517,7 +521,7 @@ body {
 }
 
 .btn-primary:hover { opacity: 0.88; }
-.btn-primary:disabled { opacity: 0.4; cursor: default; }
+.btn-primary:disabled { opacity: var(--opacity-disabled); cursor: default; }
 
 .btn-ghost {
   flex: 1;
@@ -550,7 +554,7 @@ body {
 }
 
 .btn-execute:hover { opacity: 0.88; }
-.btn-execute:disabled { opacity: 0.4; cursor: default; }
+.btn-execute:disabled { opacity: var(--opacity-disabled); cursor: default; }
 
 /* ── Report ──────────────────────────────────── */
 
@@ -738,13 +742,13 @@ footer {
   transition: opacity 0.15s;
 }
 
-.footer-settings-btn:hover { opacity: 0.72; }
+.footer-settings-btn:hover { opacity: var(--opacity-muted); }
 
 .footer-version {
   font-size: var(--text-meta-size);
   font-weight: var(--text-meta-weight);
   color: var(--color-text);
-  opacity: 0.72;
+  opacity: var(--opacity-muted);
 }
 
 /* ── Toast ───────────────────────────────────── */
