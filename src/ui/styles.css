@@ -1007,6 +1007,56 @@ footer {
 
 .uikit-wrap { flex-wrap: wrap; }
 
+/* ── SelectionCard ───────────────────────────── */
+
+.selection-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.selection-card--selected {
+  border: 2px solid var(--color-primary);
+  padding: calc(var(--space-md) - 1px);
+}
+
+.selection-card:not(.selection-card--selected):hover {
+  border-color: var(--color-border-hl);
+}
+
+.selection-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.selection-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.selection-card__title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text);
+  line-height: 1;
+}
+
+.selection-card__description {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--color-text);
+  line-height: 1;
+  opacity: 0.6;
+}
+
 /* ── Utilities ───────────────────────────────── */
 
 .hidden { display: none !important; }
