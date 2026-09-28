@@ -1,7 +1,9 @@
-import { useState } from 'preact/hooks';
+import { useState, useEffect } from 'preact/hooks';
 import { TOOLS } from '../tools';
 import { AwarenessBanner } from './AwarenessBanner';
 import { ToolCard } from './ToolCard';
+import { fetchAwareness } from '../awarenessService';
+import type { AwarenessContent } from '../awarenessService';
 
 const FILTERS = [
   { label: 'Tout', value: 'all' },
@@ -14,8 +16,18 @@ interface Props {
   onNavigate: (panelId: string, title: string) => void;
 }
 
+const FALLBACK: AwarenessContent = {
+  title: 'Titre de la bannière',
+  description: 'Description de la bannière à renseigner ici.',
+};
+
 export function HomePanel({ onNavigate }: Props) {
   const [filter, setFilter] = useState('all');
+  const [awareness, setAwareness] = useState<AwarenessContent>(FALLBACK);
+
+  useEffect(() => {
+    fetchAwareness().then(data => { if (data) setAwareness(data); });
+  }, []);
 
   const visible = TOOLS.filter(t =>
     filter === 'all' || t.categories.some(c => c.toLowerCase() === filter.toLowerCase())
@@ -34,8 +46,8 @@ export function HomePanel({ onNavigate }: Props) {
       <section class="home-section">
         <p class="home-label">WHAT'S UP ?</p>
         <AwarenessBanner
-          title="Titre de la bannière"
-          description="Description de la bannière à renseigner ici."
+          title={awareness.title}
+          description={awareness.description}
           icon={speakerIcon}
         />
       </section>
