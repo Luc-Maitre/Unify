@@ -9,7 +9,7 @@ export async function fetchAwareness(): Promise<AwarenessContent | null> {
   if (!AWARENESS_SHEET_URL) return null;
 
   try {
-    const res = await fetch(AWARENESS_SHEET_URL);
+    const res = await fetch(`${AWARENESS_SHEET_URL}?t=${Date.now()}`);
     if (!res.ok) return null;
 
     const json = await res.json() as { record?: Partial<AwarenessContent> } & Partial<AwarenessContent>;
