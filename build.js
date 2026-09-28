@@ -4,6 +4,7 @@ const fs = require('fs');
 const watch = process.argv.includes('--watch');
 
 async function buildUI() {
+  const { version } = require('./package.json');
   const jsResult = await esbuild.build({
     entryPoints: ['src/ui/index.tsx'],
     bundle: true,
@@ -12,6 +13,7 @@ async function buildUI() {
     jsx: 'automatic',
     jsxImportSource: 'preact',
     loader: { '.svg': 'dataurl' },
+    define: { __APP_VERSION__: JSON.stringify(version) },
   });
 
   const cssResult = await esbuild.build({

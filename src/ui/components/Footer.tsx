@@ -13,7 +13,7 @@ export function Footer({ onUiKit }: Props) {
       </div>
       <div class="footer-meta">
         <button class="footer-settings-btn" onClick={onUiKit}>UI Kit</button>
-        <span class="footer-version">V.1.1</span>
+        <span class="footer-version">V.{__APP_VERSION__}</span>
       </div>
     </footer>
   );
