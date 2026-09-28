@@ -19,6 +19,7 @@ interface Props {
 const FALLBACK: AwarenessContent = {
   title: 'Titre de la bannière',
   description: 'Description de la bannière à renseigner ici.',
+  visible: true,
 };
 
 export function HomePanel({ onNavigate }: Props) {
@@ -43,14 +44,16 @@ export function HomePanel({ onNavigate }: Props) {
 
   return (
     <div class="home-panel">
-      <section class="home-section">
-        <p class="home-label">WHAT'S UP ?</p>
-        <AwarenessBanner
-          title={awareness.title}
-          description={awareness.description}
-          icon={speakerIcon}
-        />
-      </section>
+      {awareness.visible && (
+        <section class="home-section">
+          <p class="home-label">WHAT'S UP ?</p>
+          <AwarenessBanner
+            title={awareness.title}
+            description={awareness.description}
+            icon={speakerIcon}
+          />
+        </section>
+      )}
 
       <section class="home-section">
         <p class="home-label">BOITE À OUTILS</p>

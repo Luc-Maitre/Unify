@@ -109,6 +109,24 @@
     }
 
     .reset-token:hover { opacity: 0.7; }
+
+    .toggle-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: #111;
+      text-transform: none;
+      letter-spacing: 0;
+      cursor: pointer;
+    }
+
+    .toggle-label input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: #111;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -132,6 +150,12 @@
       <div class="field">
         <label>Description</label>
         <textarea id="description" rows="3" maxlength="200"></textarea>
+      </div>
+      <div class="field toggle-field">
+        <label class="toggle-label">
+          <input type="checkbox" id="visible" checked />
+          Afficher la bannière dans le plugin
+        </label>
       </div>
       <hr class="sep" />
       <button id="publish-btn">Publier</button>
@@ -163,9 +187,9 @@
       return res.json();
     }
 
-    async function publish(token, title, description, sha) {
+    async function publish(token, title, description, visible, sha) {
       const content = btoa(unescape(encodeURIComponent(
-        JSON.stringify({ title, description }, null, 2) + '\n'
+        JSON.stringify({ title, description, visible }, null, 2) + '\n'
       )));
       const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE}`, {
         method: 'PUT',
@@ -195,6 +219,7 @@
         const data = JSON.parse(decodeURIComponent(escape(atob(file.content.replace(/\n/g, '')))));
         $('title').value = data.title || '';
         $('description').value = data.description || '';
+        $('visible').checked = data.visible !== false;
         showStatus('', '');
       } catch (e) {
         showStatus(e.message, 'err');
@@ -219,6 +244,7 @@
       const token = getToken();
       const title = $('title').value.trim();
       const description = $('description').value.trim();
+      const visible = $('visible').checked;
 
       if (!title || !description) {
         showStatus('Titre et description requis.', 'err');
@@ -230,7 +256,7 @@
 
       try {
         const file = await loadCurrent(token);
-        await publish(token, title, description, file.sha);
+        await publish(token, title, description, visible, file.sha);
         showStatus('Publié ! Le plugin se mettra à jour dans quelques secondes.', 'ok');
       } catch (e) {
         showStatus(e.message, 'err');

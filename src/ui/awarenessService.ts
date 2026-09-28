@@ -3,6 +3,7 @@ import { AWARENESS_SHEET_URL } from './config';
 export interface AwarenessContent {
   title: string;
   description: string;
+  visible: boolean;
 }
 
 export async function fetchAwareness(): Promise<AwarenessContent | null> {
@@ -16,7 +17,7 @@ export async function fetchAwareness(): Promise<AwarenessContent | null> {
     const data = json.record ?? json;
     if (!data.title || !data.description) return null;
 
-    return { title: data.title, description: data.description };
+    return { title: data.title, description: data.description, visible: data.visible !== false };
   } catch {
     return null;
   }
