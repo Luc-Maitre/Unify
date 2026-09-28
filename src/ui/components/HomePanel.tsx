@@ -28,6 +28,14 @@ export function HomePanel({ onNavigate }: Props) {
 
   useEffect(() => {
     fetchAwareness().then(data => { if (data) setAwareness(data); });
+
+    const handler = (event: MessageEvent) => {
+      if (event.data?.pluginMessage?.type === 'plugin-run') {
+        fetchAwareness().then(data => { if (data) setAwareness(data); });
+      }
+    };
+    window.addEventListener('message', handler);
+    return () => window.removeEventListener('message', handler);
   }, []);
 
   const visible = TOOLS.filter(t =>

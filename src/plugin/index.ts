@@ -5,6 +5,7 @@ import { findDeprecatedInstances } from './scan';
 import { executeSwaps, resolveTargetComponent, setPropertyValue } from './swap';
 
 figma.showUI(__html__, { width: 600, height: 800, title: 'Unify' });
+figma.ui.postMessage({ type: 'plugin-run' });
 
 figma.ui.onmessage = async (msg: {
   type: string;
