@@ -35,7 +35,6 @@
 /* ─────────────────────────────────────────────────
    Design Tokens — Figma variables
    Shadows : à ajouter (tokens non encore exportés)
-   Light mode : à implémenter quand tokens complets
    ───────────────────────────────────────────────── */
 
 :root {
@@ -46,12 +45,14 @@
   --color-border:        #2B2E2C;
   --color-border-hl:     #606864;
 
-  --color-primary:       #06D6A0;
-  --color-on-primary:    #070707;
-  --color-secondary:     #7259E8;
-  --color-on-secondary:  #FFFFFF;
-  --color-accent:        #F27CA7;
-  --color-on-accent:     #070707;
+  --color-primary:           #06D6A0;
+  --color-on-primary:        #070707;
+  --color-primary-container: color-mix(in srgb, var(--color-primary) 56%, transparent);
+  --color-primary-fg:        var(--color-primary);
+  --color-secondary:         #7259E8;
+  --color-on-secondary:      #FFFFFF;
+  --color-accent:            #F27CA7;
+  --color-on-accent:         #070707;
 
   --color-success:           #16BA5B;
   --color-success-container: color-mix(in srgb, #16BA5B 32%, transparent);
@@ -95,6 +96,81 @@
   /* Opacity */
   --opacity-disabled: 0.4;
   --opacity-muted:    0.72;
+}
+
+/* ─────────────────────────────────────────────────
+   Light mode tokens — all colors verified WCAG AA
+   ─────────────────────────────────────────────────
+   Surfaces / Text
+     background #F2F4F3 · surface #FFF · text #111413 → 17:1 ✓
+   Brand
+     primary            #06D6A0 bg / on-primary #070707  → 10.9:1 ✓ (boutons uniquement)
+     primary-container  22% teal sur fond clair  (vs 56% dark)
+     primary-fg         #006950 (teal texte/icône sur fond clair)  → 5.9:1 ✓
+     secondary          #5B42D6 bg / on-secondary #FFF   →  5.8:1 ✓
+     accent             #A63862 bg / on-accent #FFF       →  5.6:1 ✓
+   Text sur fond (neutral, liens…)
+     neutral   #52595A sur surface #FFF          →  6.1:1 ✓
+   Sémantiques (texte sur container)
+     success   #076C2F sur container mint        →  4.9:1 ✓
+     warning   #8A4800 sur container ambre       →  5.5:1 ✓
+     error     #B91C2C sur container rouge       →  5.3:1 ✓
+   ───────────────────────────────────────────────── */
+
+/* Light mode — activé par le système OU par :root.light (toggle UIKit) */
+
+@media (prefers-color-scheme: light) {
+  :root:not(.dark) {
+    --color-background:        #F2F4F3;
+    --color-surface:           #FFFFFF;
+    --color-neutral:           #52595A;
+    --color-border:            #D4D8D6;
+    --color-border-hl:         #777E7B;
+
+    --color-primary:           #06D6A0;
+    --color-on-primary:        #070707;
+    --color-primary-container: color-mix(in srgb, var(--color-primary) 22%, transparent);
+    --color-primary-fg:        #006950;
+    --color-secondary:         #5B42D6;
+    --color-on-secondary:      #FFFFFF;
+    --color-accent:            #A63862;
+    --color-on-accent:         #FFFFFF;
+
+    --color-success:           #076C2F;
+    --color-success-container: color-mix(in srgb, #16BA5B 18%, transparent);
+    --color-warning:           #8A4800;
+    --color-warning-container: color-mix(in srgb, #D97706 14%, transparent);
+    --color-error:             #B91C2C;
+    --color-error-container:   color-mix(in srgb, #DC3545 12%, transparent);
+
+    --color-text:              #111413;
+  }
+}
+
+:root.light {
+  --color-background:        #F2F4F3;
+  --color-surface:           #FFFFFF;
+  --color-neutral:           #52595A;
+  --color-border:            #D4D8D6;
+  --color-border-hl:         #777E7B;
+
+  --color-primary:           #06D6A0;
+  --color-on-primary:        #070707;
+  --color-primary-container: color-mix(in srgb, var(--color-primary) 22%, transparent);
+  --color-primary-fg:        #006950;
+  --color-secondary:         #5B42D6;
+  --color-on-secondary:      #FFFFFF;
+  --color-accent:            #A63862;
+  --color-on-accent:         #FFFFFF;
+
+  --color-success:           #076C2F;
+  --color-success-container: color-mix(in srgb, #16BA5B 18%, transparent);
+  --color-warning:           #8A4800;
+  --color-warning-container: color-mix(in srgb, #D97706 14%, transparent);
+  --color-error:             #B91C2C;
+  --color-error-container:   color-mix(in srgb, #DC3545 12%, transparent);
+
+  --color-text:              #111413;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -162,7 +238,7 @@ body {
   align-items: center;
   gap: var(--space-md);
   padding: var(--space-md);
-  background: rgba(6, 214, 160, 0.56);
+  background: var(--color-primary-container);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   overflow: hidden;
@@ -335,7 +411,7 @@ body {
   flex-shrink: 0;
 }
 
-.tag--default  { background: var(--color-secondary); color: var(--color-text); }
+.tag--default  { background: var(--color-secondary); color: var(--color-on-secondary); }
 .tag--new      { background: var(--color-accent);    color: var(--color-on-accent); }
 .tag--tertiary { background: transparent; border: 1px solid var(--color-border-hl); color: var(--color-text); }
 
@@ -372,7 +448,7 @@ body {
 }
 
 .migration-item:not(.disabled):hover { border-color: var(--color-border-hl); }
-.migration-item.active { border-color: var(--color-primary); background: rgba(6, 214, 160, 0.08); }
+.migration-item.active { border-color: var(--color-primary); background: color-mix(in srgb, var(--color-primary) 8%, transparent); }
 .migration-item.disabled { opacity: var(--opacity-disabled); cursor: not-allowed; }
 
 .migration-item input[type="radio"] { accent-color: var(--color-primary); flex-shrink: 0; cursor: pointer; }
@@ -472,8 +548,8 @@ body {
 
 .scope-btn.active {
   border-color: var(--color-primary);
-  background: rgba(6, 214, 160, 0.1);
-  color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+  color: var(--color-primary-fg);
 }
 
 /* ── Tool navbar ─────────────────────────────── */
@@ -668,7 +744,7 @@ body {
   border-radius: var(--radius-full);
   font-size: var(--text-label-size);
   font-weight: var(--text-label-weight);
-  color: var(--color-on-primary);
+  color: var(--color-on-accent);
   line-height: 1;
 }
 
@@ -740,11 +816,11 @@ body {
 
 .prop-tag {
   padding: 2px 7px;
-  background: rgba(6, 214, 160, 0.12);
+  background: color-mix(in srgb, var(--color-primary) 12%, transparent);
   border-radius: var(--radius-sm);
   font-size: var(--text-meta-size);
   font-weight: var(--text-label-weight);
-  color: var(--color-primary);
+  color: var(--color-primary-fg);
 }
 
 .select-all-row {
@@ -806,8 +882,8 @@ body {
   align-items: center;
   gap: var(--space-xs);
   padding: var(--space-xs) var(--space-sm);
-  background: rgba(217, 119, 6, 0.1);
-  border: 1px solid rgba(217, 119, 6, 0.4);
+  background: var(--color-warning-container);
+  border: 1px solid color-mix(in srgb, var(--color-warning) 40%, transparent);
   border-radius: var(--radius-md);
   color: var(--color-warning);
   font-size: 11px;
@@ -914,7 +990,7 @@ footer {
   display: inline-block;
   width: 12px;
   height: 12px;
-  border: 2px solid rgba(7, 7, 7, 0.3);
+  border: 2px solid color-mix(in srgb, var(--color-on-primary) 30%, transparent);
   border-top-color: var(--color-on-primary);
   border-radius: var(--radius-full);
   animation: spin 0.6s linear infinite;
@@ -994,7 +1070,7 @@ footer {
   display: inline-block;
   width: 16px;
   height: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.1);
+  border: 2px solid color-mix(in srgb, var(--color-neutral) 20%, transparent);
   border-top-color: var(--color-neutral);
   border-radius: var(--radius-full);
   animation: spin 0.6s linear infinite;
@@ -1014,7 +1090,7 @@ footer {
   text-transform: uppercase;
   letter-spacing: .1em;
   color: var(--color-accent);
-  border-bottom: 1px solid rgba(242, 124, 167, 0.2);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
   padding-bottom: var(--space-xxs);
 }
 
