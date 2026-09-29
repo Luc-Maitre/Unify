@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'preact/hooks';
+import { useState, useRef, useCallback, useEffect } from 'preact/hooks';
 import type { Panel, ActionBarConfig } from './types';
 import { HomePanel } from './components/HomePanel';
 import { TransitionPanel } from './components/TransitionPanel';
@@ -7,6 +7,7 @@ import { ToolNavbar } from './components/ToolNavbar';
 import { Footer } from './components/Footer';
 import { ActionBarLegacy } from './components/ActionBarLegacy';
 import { Feedback } from './components/Feedback';
+import logoMotion from './assets/logo-motion.svg';
 
 interface ToastState {
   title: string;
@@ -19,6 +20,14 @@ export function App() {
   const [toast, setToast] = useState<ToastState | null>(null);
   const [actionBar, setActionBar] = useState<ActionBarConfig | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [splashFading, setSplashFading] = useState(false);
+  const [splashGone, setSplashGone] = useState(false);
+
+  useEffect(() => {
+    const fadeTimer = setTimeout(() => setSplashFading(true), 2000);
+    const removeTimer = setTimeout(() => setSplashGone(true), 2400);
+    return () => { clearTimeout(fadeTimer); clearTimeout(removeTimer); };
+  }, []);
 
   const showToast = useCallback((title: string, variant: 'success' | 'error' | 'warning') => {
     if (toastTimer.current) clearTimeout(toastTimer.current);
@@ -42,6 +51,11 @@ export function App() {
 
   return (
     <>
+      {!splashGone && (
+        <div class={`splash-overlay${splashFading ? ' splash-overlay--fade' : ''}`}>
+          <img src={logoMotion} width="56" height="56" alt="" />
+        </div>
+      )}
       {!isHome && <ToolNavbar title={panelTitle} onBack={navigateHome} />}
       <div class="main">
         {panel === 'home' && <HomePanel onNavigate={navigateTo} />}
