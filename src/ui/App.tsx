@@ -7,7 +7,7 @@ import { ToolNavbar } from './components/ToolNavbar';
 import { Footer } from './components/Footer';
 import { ActionBarLegacy } from './components/ActionBarLegacy';
 import { Feedback } from './components/Feedback';
-import logoMotion from './assets/logo-motion.svg';
+import { LogoMotion } from './components/LogoMotion';
 
 interface ToastState {
   title: string;
@@ -53,7 +53,7 @@ export function App() {
     <>
       {!splashGone && (
         <div class={`splash-overlay${splashFading ? ' splash-overlay--fade' : ''}`}>
-          <img src={logoMotion} width="56" height="56" alt="" />
+          <LogoMotion width={56} height={56} />
         </div>
       )}
       {!isHome && <ToolNavbar title={panelTitle} onBack={navigateHome} />}

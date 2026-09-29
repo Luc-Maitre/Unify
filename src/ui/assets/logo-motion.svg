@@ -86,8 +86,8 @@ svg { overflow: visible; }
 #top-elements {
   transform-origin: 0 0;
   animation:
-    kf_top-elements_transform_0 2s linear infinite,
-    kf_top-elements_opacity_0 2s linear infinite;
+    kf_top-elements_transform_0 2s linear 1 forwards,
+    kf_top-elements_opacity_0 2s linear 1 forwards;
 }
 @keyframes kf_top-elements_2_transform_0 {
   0% { transform: translateX(12.571px) translateY(0px) translateY(-18px) translate(5.714px, 5.714px) rotate(0.262rad) scaleX(0) scaleY(0) translate(-5.714px, -5.714px); }
@@ -111,8 +111,8 @@ svg { overflow: visible; }
 #top-elements_2 {
   transform-origin: 0 0;
   animation:
-    kf_top-elements_2_transform_0 2s linear infinite,
-    kf_top-elements_2_opacity_0 2s linear infinite;
+    kf_top-elements_2_transform_0 2s linear 1 forwards,
+    kf_top-elements_2_opacity_0 2s linear 1 forwards;
 }
 @keyframes kf_top-elements_3_transform_0 {
   0% { transform: translateX(12.571px) translateY(12.571px) translateY(-18px) translate(5.714px, 5.714px) rotate(0.262rad) scaleX(0) scaleY(0) translate(-5.714px, -5.714px); }
@@ -134,8 +134,8 @@ svg { overflow: visible; }
 #top-elements_3 {
   transform-origin: 0 0;
   animation:
-    kf_top-elements_3_transform_0 2s linear infinite,
-    kf_top-elements_3_opacity_0 2s linear infinite;
+    kf_top-elements_3_transform_0 2s linear 1 forwards,
+    kf_top-elements_3_opacity_0 2s linear 1 forwards;
 }
 </style>
 <g id="Elastic">

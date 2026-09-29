@@ -1,4 +1,5 @@
-import logoMotion from '../assets/logo-motion.svg';
+import { useState } from 'preact/hooks';
+import { LogoMotion } from './LogoMotion';
 import { ActionBar } from './ActionBar';
 import { Badge } from './Badge';
 import { Button } from './Button';
@@ -10,8 +11,30 @@ import { Checkbox } from './Checkbox';
 import { Radio } from './Radio';
 
 export function UiKitPanel() {
+  const [lightMode, setLightMode] = useState(false);
+
+  function toggleLightMode(enabled: boolean) {
+    setLightMode(enabled);
+    document.documentElement.classList.toggle('light', enabled);
+  }
+
   return (
     <div class="tool-panel">
+      <div class="uikit-section">
+        <div class="uikit-section-title">Thème</div>
+        <label class="uikit-row" style={{ gap: '8px', cursor: 'pointer', userSelect: 'none' }}>
+          <input
+            type="checkbox"
+            class="checkbox"
+            checked={lightMode}
+            onChange={(e) => toggleLightMode((e.target as HTMLInputElement).checked)}
+          />
+          <span style={{ fontSize: 'var(--text-label-size)', fontWeight: 'var(--text-label-weight)' }}>
+            Light mode
+          </span>
+        </label>
+      </div>
+
       <div class="uikit-section">
         <div class="uikit-section-title">Typographie</div>
         <div class="uikit-row uikit-wrap">
@@ -108,10 +131,8 @@ export function UiKitPanel() {
               <div class="tool-card-header">
                 <IconContainer size="medium">
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <path d="M5 3.5L3 1.5L1 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M3 1.5V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                    <path d="M11 12.5L13 14.5L15 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M13 14.5V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M7.81577 5.02583C7.56282 5.29144 7.14415 5.30005 6.88065 5.04507L5.32807 3.56419L5.32807 11.3334C5.32807 11.7016 5.03197 12 4.66671 12C4.30144 12 4.00534 11.7016 4.00534 11.3334L4.00534 3.56419L2.45276 5.04507C2.18926 5.30005 1.7706 5.29144 1.51764 5.02583C1.26468 4.76022 1.27323 4.3382 1.53672 4.08322L4.20869 1.51912C4.46461 1.27146 4.8688 1.27146 5.12472 1.51912L7.79669 4.08322C8.06019 4.3382 8.06873 4.76022 7.81577 5.02583Z" fill="currentColor"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M8.18431 10.9743C8.43726 10.7086 8.85593 10.7 9.11943 10.955L10.672 12.4359V4.66671C10.672 4.29852 10.9681 4.00004 11.3334 4.00004C11.6986 4.00004 11.9947 4.29852 11.9947 4.66671V12.4359L13.5473 10.955C13.8108 10.7 14.2295 10.7086 14.4824 10.9743C14.7354 11.2399 14.7269 11.6619 14.4634 11.9169L11.7914 14.481C11.5355 14.7286 11.1313 14.7286 10.8754 14.481L8.20339 11.9169C7.93989 11.6619 7.93135 11.2399 8.18431 10.9743Z" fill="currentColor"/>
                   </svg>
                 </IconContainer>
                 <span class="tool-card-title">Easy Swap</span>
@@ -182,18 +203,14 @@ export function UiKitPanel() {
         <div class="uikit-row" style={{ gap: '12px', alignItems: 'center' }}>
           <IconContainer size="medium">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M5 3.5L3 1.5L1 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M3 1.5V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-              <path d="M11 12.5L13 14.5L15 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M13 14.5V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M7.81577 5.02583C7.56282 5.29144 7.14415 5.30005 6.88065 5.04507L5.32807 3.56419L5.32807 11.3334C5.32807 11.7016 5.03197 12 4.66671 12C4.30144 12 4.00534 11.7016 4.00534 11.3334L4.00534 3.56419L2.45276 5.04507C2.18926 5.30005 1.7706 5.29144 1.51764 5.02583C1.26468 4.76022 1.27323 4.3382 1.53672 4.08322L4.20869 1.51912C4.46461 1.27146 4.8688 1.27146 5.12472 1.51912L7.79669 4.08322C8.06019 4.3382 8.06873 4.76022 7.81577 5.02583Z" fill="currentColor"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M8.18431 10.9743C8.43726 10.7086 8.85593 10.7 9.11943 10.955L10.672 12.4359V4.66671C10.672 4.29852 10.9681 4.00004 11.3334 4.00004C11.6986 4.00004 11.9947 4.29852 11.9947 4.66671V12.4359L13.5473 10.955C13.8108 10.7 14.2295 10.7086 14.4824 10.9743C14.7354 11.2399 14.7269 11.6619 14.4634 11.9169L11.7914 14.481C11.5355 14.7286 11.1313 14.7286 10.8754 14.481L8.20339 11.9169C7.93989 11.6619 7.93135 11.2399 8.18431 10.9743Z" fill="currentColor"/>
             </svg>
           </IconContainer>
           <IconContainer size="large">
             <svg width="32" height="32" viewBox="0 0 16 16" fill="none">
-              <path d="M5 3.5L3 1.5L1 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M3 1.5V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-              <path d="M11 12.5L13 14.5L15 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M13 14.5V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M7.81577 5.02583C7.56282 5.29144 7.14415 5.30005 6.88065 5.04507L5.32807 3.56419L5.32807 11.3334C5.32807 11.7016 5.03197 12 4.66671 12C4.30144 12 4.00534 11.7016 4.00534 11.3334L4.00534 3.56419L2.45276 5.04507C2.18926 5.30005 1.7706 5.29144 1.51764 5.02583C1.26468 4.76022 1.27323 4.3382 1.53672 4.08322L4.20869 1.51912C4.46461 1.27146 4.8688 1.27146 5.12472 1.51912L7.79669 4.08322C8.06019 4.3382 8.06873 4.76022 7.81577 5.02583Z" fill="currentColor"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M8.18431 10.9743C8.43726 10.7086 8.85593 10.7 9.11943 10.955L10.672 12.4359V4.66671C10.672 4.29852 10.9681 4.00004 11.3334 4.00004C11.6986 4.00004 11.9947 4.29852 11.9947 4.66671V12.4359L13.5473 10.955C13.8108 10.7 14.2295 10.7086 14.4824 10.9743C14.7354 11.2399 14.7269 11.6619 14.4634 11.9169L11.7914 14.481C11.5355 14.7286 11.1313 14.7286 10.8754 14.481L8.20339 11.9169C7.93989 11.6619 7.93135 11.2399 8.18431 10.9743Z" fill="currentColor"/>
             </svg>
           </IconContainer>
         </div>
@@ -201,10 +218,23 @@ export function UiKitPanel() {
 
       <div class="uikit-section">
         <div class="uikit-section-title">Logo animé</div>
-        <div class="uikit-row" style={{ gap: '24px', alignItems: 'center' }}>
-          <img src={logoMotion} width="24" height="24" alt="Unify logo 24px" />
-          <img src={logoMotion} width="48" height="48" alt="Unify logo 48px" />
-          <img src={logoMotion} width="64" height="64" alt="Unify logo 64px" />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <span class="prop-tag" style={{ alignSelf: 'flex-start' }}>loop={'{false}'}</span>
+            <div class="uikit-row" style={{ gap: '8px', alignItems: 'flex-end' }}>
+              <LogoMotion width={24} height={24} />
+              <LogoMotion width={48} height={48} />
+              <LogoMotion width={64} height={64} />
+            </div>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <span class="prop-tag" style={{ alignSelf: 'flex-start' }}>loop</span>
+            <div class="uikit-row" style={{ gap: '8px', alignItems: 'flex-end' }}>
+              <LogoMotion width={24} height={24} loop />
+              <LogoMotion width={48} height={48} loop />
+              <LogoMotion width={64} height={64} loop />
+            </div>
+          </div>
         </div>
       </div>
 
