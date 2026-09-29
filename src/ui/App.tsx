@@ -1,12 +1,14 @@
 import { useState, useRef, useCallback, useEffect } from 'preact/hooks';
-import type { Panel, ActionBarConfig } from './types';
+import type { Panel, ActionBarConfig, AchievementInfo } from './types';
 import { HomePanel } from './components/HomePanel';
 import { TransitionPanel } from './components/TransitionPanel';
 import { UiKitPanel } from './components/UiKitPanel';
+import { AchievementsPanel } from './components/AchievementsPanel';
 import { ToolNavbar } from './components/ToolNavbar';
 import { Footer } from './components/Footer';
-import { ActionBarLegacy } from './components/ActionBarLegacy';
+import { ActionBar } from './components/ActionBar';
 import { Feedback } from './components/Feedback';
+import { AchievementToast } from './components/AchievementToast';
 import { LogoMotion } from './components/LogoMotion';
 
 interface ToastState {
@@ -19,7 +21,10 @@ export function App() {
   const [panelTitle, setPanelTitle] = useState('');
   const [toast, setToast] = useState<ToastState | null>(null);
   const [actionBar, setActionBar] = useState<ActionBarConfig | null>(null);
+  const [achievement, setAchievement] = useState<{ label: string; subtitle: string } | null>(null);
+  const [unlockedAchievements, setUnlockedAchievements] = useState<AchievementInfo[]>([]);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const achievementTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [splashFading, setSplashFading] = useState(false);
   const [splashGone, setSplashGone] = useState(false);
 
@@ -27,6 +32,29 @@ export function App() {
     const fadeTimer = setTimeout(() => setSplashFading(true), 2000);
     const removeTimer = setTimeout(() => setSplashGone(true), 2400);
     return () => { clearTimeout(fadeTimer); clearTimeout(removeTimer); };
+  }, []);
+
+  useEffect(() => {
+    function handleMessage(event: MessageEvent) {
+      const msg = event.data?.pluginMessage;
+      if (msg?.type === 'stats') {
+        setUnlockedAchievements(msg.unlockedAchievements ?? []);
+      }
+      if (msg?.type === 'achievement-unlocked') {
+        setUnlockedAchievements(prev => {
+          if (prev.some(a => a.id === msg.id)) return prev;
+          return [...prev, { id: msg.id, label: msg.label, subtitle: msg.subtitle, unlockedAt: msg.unlockedAt }];
+        });
+        if (achievementTimer.current) clearTimeout(achievementTimer.current);
+        achievementTimer.current = setTimeout(() => {
+          setAchievement({ label: msg.label, subtitle: msg.subtitle });
+          achievementTimer.current = setTimeout(() => setAchievement(null), 4000);
+        }, 1500);
+      }
+    }
+    window.addEventListener('message', handleMessage);
+    parent.postMessage({ pluginMessage: { type: 'get-stats' } }, '*');
+    return () => window.removeEventListener('message', handleMessage);
   }, []);
 
   const showToast = useCallback((title: string, variant: 'success' | 'error' | 'warning') => {
@@ -60,23 +88,37 @@ export function App() {
       <div class="main">
         {panel === 'home' && <HomePanel onNavigate={navigateTo} />}
         {panel === 'transition' && (
-          <TransitionPanel onActionBar={setActionBar} onToast={showToast} />
+          <TransitionPanel onActionBar={setActionBar} onToast={showToast} onHome={navigateHome} />
         )}
         {panel === 'uikit' && <UiKitPanel />}
+        {panel === 'achievements' && <AchievementsPanel achievements={unlockedAchievements} />}
       </div>
       {!isHome && actionBar && (
-        <ActionBarLegacy
-          label={actionBar.label}
-          disabled={actionBar.disabled}
-          loading={actionBar.loading}
-          onClick={actionBar.onClick}
+        <ActionBar
+          primaryLabel={actionBar.label}
+          primaryDisabled={actionBar.disabled}
+          primaryLoading={actionBar.loading}
+          onPrimary={actionBar.onClick}
+          secondaryLabel={actionBar.secondaryLabel}
+          onSecondary={actionBar.onSecondary}
         />
-
       )}
-      <Footer onUiKit={() => navigateTo('uikit', 'UI Kit')} />
+      <Footer
+        onUiKit={() => navigateTo('uikit', 'UI Kit')}
+        hasAchievements={unlockedAchievements.length > 0}
+        onAchievements={() => navigateTo('achievements', 'Mes succès')}
+      />
       {toast && (
         <div class="toast visible">
           <Feedback variant={toast.variant} title={toast.title} />
+        </div>
+      )}
+      {achievement && (
+        <div
+          class="toast visible achievement-toast-wrap"
+          style={{ bottom: (!isHome && actionBar) ? '160px' : '68px' }}
+        >
+          <AchievementToast label={achievement.label} subtitle={achievement.subtitle} onClose={() => setAchievement(null)} />
         </div>
       )}
     </>

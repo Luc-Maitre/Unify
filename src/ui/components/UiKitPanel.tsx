@@ -1,10 +1,16 @@
 import { useState } from 'preact/hooks';
+import cursorIcon from '../assets/Cursor.svg';
+import fileIcon from '../assets/File.svg';
+import megaphoneIcon from '../assets/Megaphone.svg';
+import sortIcon from '../assets/Sort.svg';
+import { CheckboxCard } from './CheckboxCard';
 import { LogoMotion } from './LogoMotion';
 import { ActionBar } from './ActionBar';
 import { Badge } from './Badge';
 import { Button } from './Button';
 import { Feedback } from './Feedback';
 import { IconContainer } from './IconContainer';
+import { SelectionCard } from './SelectionCard';
 import { Stepper } from './Stepper';
 import { Tag } from './Tag';
 import { Checkbox } from './Checkbox';
@@ -12,14 +18,28 @@ import { Radio } from './Radio';
 
 export function UiKitPanel() {
   const [lightMode, setLightMode] = useState(false);
+  const [storageReset, setStorageReset] = useState(false);
 
   function toggleLightMode(enabled: boolean) {
     setLightMode(enabled);
     document.documentElement.classList.toggle('light', enabled);
   }
 
+  function resetStorage() {
+    parent.postMessage({ pluginMessage: { type: 'reset-storage' } }, '*');
+    setStorageReset(true);
+    setTimeout(() => setStorageReset(false), 2000);
+  }
+
   return (
     <div class="tool-panel">
+      <div class="uikit-section">
+        <div class="uikit-section-title">Debug</div>
+        <Button appearance="tertiary" onClick={resetStorage}>
+          {storageReset ? '✓ Mémoire réinitialisée' : 'Reset mémoire plugin'}
+        </Button>
+      </div>
+
       <div class="uikit-section">
         <div class="uikit-section-title">Thème</div>
         <label class="uikit-row" style={{ gap: '8px', cursor: 'pointer', userSelect: 'none' }}>
@@ -62,10 +82,6 @@ export function UiKitPanel() {
           <Button appearance="secondary" disabled>Désactivé</Button>
           <Button appearance="tertiary" disabled>Désactivé</Button>
         </div>
-        <div class="uikit-row uikit-wrap" style={{ marginTop: '8px' }}>
-          <button class="scope-btn active" style={{ flex: 'none', width: 'auto', padding: '8px 16px' }}>Tout le document</button>
-          <button class="scope-btn" style={{ flex: 'none', width: 'auto', padding: '8px 16px' }}>Sélection</button>
-        </div>
       </div>
 
       <div class="uikit-section">
@@ -96,6 +112,21 @@ export function UiKitPanel() {
           <Radio name="uikit-radio" />
           <Radio name="uikit-radio" checked />
           <Radio name="uikit-radio" disabled />
+        </div>
+      </div>
+
+      <div class="uikit-section">
+        <div class="uikit-section-title">Selection cards</div>
+        <div class="scope-row" style={{ pointerEvents: 'none' }}>
+          <SelectionCard
+            title="Tout le document"
+            icon={<img src={fileIcon} alt="" />}
+          />
+          <SelectionCard
+            title="Sélection"
+            selected
+            icon={<img src={cursorIcon} alt="" />}
+          />
         </div>
       </div>
 
@@ -161,17 +192,10 @@ export function UiKitPanel() {
       </div>
 
       <div class="uikit-section">
-        <div class="uikit-section-title">Migration items</div>
-        <div class="migration-list" style={{ pointerEvents: 'none' }}>
-          <label class="migration-item active">
-            <input type="radio" name="uikit-migration" checked />
-            <span class="migration-label">Buttons & Icon Buttons</span>
-          </label>
-          <label class="migration-item disabled">
-            <input type="radio" name="uikit-migration" disabled />
-            <span class="migration-label">Chips</span>
-            <span class="soon-badge">Bientôt</span>
-          </label>
+        <div class="uikit-section-title">Checkbox cards</div>
+        <div class="migration-card-list" style={{ pointerEvents: 'none' }}>
+          <CheckboxCard label="Buttons & Icon Buttons" checked />
+          <CheckboxCard label="Tags" disabled slot={<Tag variant="tertiary">BIENTÔT</Tag>} />
         </div>
       </div>
 
@@ -243,6 +267,36 @@ export function UiKitPanel() {
         <div class="uikit-row" style={{ gap: '16px' }}>
           <span class="spinner" style={{ borderTopColor: 'var(--color-on-primary)' }} />
           <span class="preview-spinner" />
+        </div>
+      </div>
+
+      <div class="uikit-section">
+        <div class="uikit-section-title">Icônes</div>
+        <div class="uikit-row uikit-wrap" style={{ gap: '16px' }}>
+          <div class="icon-tile-group">
+            <div class="icon-tile"><img src={cursorIcon} width="16" height="16" alt="" /></div>
+            <span class="icon-tile-label">Cursor</span>
+          </div>
+          <div class="icon-tile-group">
+            <div class="icon-tile"><img src={fileIcon} width="16" height="16" alt="" /></div>
+            <span class="icon-tile-label">File</span>
+          </div>
+          <div class="icon-tile-group">
+            <div class="icon-tile"><img src={megaphoneIcon} width="16" height="16" alt="" /></div>
+            <span class="icon-tile-label">Megaphone</span>
+          </div>
+          <div class="icon-tile-group">
+            <div class="icon-tile"><img src={sortIcon} width="16" height="16" alt="" /></div>
+            <span class="icon-tile-label">Sort</span>
+          </div>
+          <div class="icon-tile-group">
+            <div class="icon-tile">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ color: 'white' }}>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M10.3077 4.18427C10.0421 4.43722 10.0335 4.85589 10.2885 5.11939L12.436 7.33863H2.00016C1.63197 7.33863 1.3335 7.63474 1.3335 8C1.3335 8.36526 1.63197 8.66137 2.00016 8.66137H12.436L10.2885 10.8806C10.0335 11.1441 10.0421 11.5628 10.3077 11.8157C10.5733 12.0687 10.9953 12.0601 11.2503 11.7967L14.4811 8.45802C14.7287 8.20209 14.7287 7.79791 14.4811 7.54198L11.2503 4.20335C10.9953 3.93985 10.5733 3.93131 10.3077 4.18427Z" fill="currentColor"/>
+              </svg>
+            </div>
+            <span class="icon-tile-label">Arrow</span>
+          </div>
         </div>
       </div>
     </div>

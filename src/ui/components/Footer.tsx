@@ -2,9 +2,11 @@ import lbcOrange from '../assets/LBC-orange.svg';
 
 interface Props {
   onUiKit: () => void;
+  onAchievements?: () => void;
+  hasAchievements?: boolean;
 }
 
-export function Footer({ onUiKit }: Props) {
+export function Footer({ onUiKit, onAchievements, hasAchievements }: Props) {
   return (
     <footer id="footer-home">
       <div class="footer-brand">
@@ -12,6 +14,9 @@ export function Footer({ onUiKit }: Props) {
         <span class="footer-brand-name">Leboncoin plugin</span>
       </div>
       <div class="footer-meta">
+        {hasAchievements && (
+          <button class="footer-settings-btn" onClick={onAchievements}>Mes succès</button>
+        )}
         <button class="footer-settings-btn" onClick={onUiKit}>UI Kit</button>
         <span class="footer-version">V.{__APP_VERSION__}</span>
       </div>

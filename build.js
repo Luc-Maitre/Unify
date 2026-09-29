@@ -12,7 +12,7 @@ async function buildUI() {
     target: 'es2020',
     jsx: 'automatic',
     jsxImportSource: 'preact',
-    loader: { '.svg': 'dataurl' },
+    loader: { '.svg': 'dataurl', '.png': 'dataurl' },
     define: { __APP_VERSION__: JSON.stringify(version) },
   });
 

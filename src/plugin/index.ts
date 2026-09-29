@@ -7,6 +7,35 @@ import { executeSwaps, resolveTargetComponent, setPropertyValue } from './swap';
 figma.showUI(__html__, { width: 600, height: 800, title: 'Unify' });
 figma.ui.postMessage({ type: 'plugin-run' });
 
+interface Stats {
+  totalSwapped: number;
+  unlockedAchievements: Array<{ id: string; unlockedAt: string }>;
+}
+
+const ACHIEVEMENTS: { id: string; label: string; subtitle: string; threshold: number }[] = [
+  { id: 'first-swap', label: 'Un bon début', subtitle: 'Premier swap effectué', threshold: 1 },
+];
+
+async function readStats(): Promise<Stats> {
+  const stored = await figma.clientStorage.getAsync('stats') as Stats | undefined;
+  return stored ?? { totalSwapped: 0, unlockedAchievements: [] };
+}
+
+async function addSwaps(count: number): Promise<void> {
+  const stats = await readStats();
+  stats.totalSwapped += count;
+  const unlockedIds = stats.unlockedAchievements.map(u => u.id);
+  const newlyUnlocked = ACHIEVEMENTS.filter(
+    a => !unlockedIds.includes(a.id) && stats.totalSwapped >= a.threshold
+  );
+  const now = new Date().toISOString();
+  for (const a of newlyUnlocked) stats.unlockedAchievements.push({ id: a.id, unlockedAt: now });
+  await figma.clientStorage.setAsync('stats', stats);
+  for (const a of newlyUnlocked) {
+    figma.ui.postMessage({ type: 'achievement-unlocked', id: a.id, label: a.label, subtitle: a.subtitle, unlockedAt: now });
+  }
+}
+
 figma.ui.onmessage = async (msg: {
   type: string;
   migrationId?: string;
@@ -47,6 +76,7 @@ figma.ui.onmessage = async (msg: {
     try {
       const result = await executeSwaps(migration, msg.instanceIds);
       figma.ui.postMessage({ type: 'swap-done', ...result });
+      if (result.swapped > 0) await addSwaps(result.swapped);
     } catch (e) {
       figma.ui.postMessage({ type: 'error', message: String(e) });
     }
@@ -120,6 +150,39 @@ figma.ui.onmessage = async (msg: {
     } catch {
       figma.ui.postMessage({ type: 'preview-result', nodeId: msg.nodeId, targetComponentKey: msg.targetComponentKey, mappedProperties: msg.mappedProperties, beforeBytes: null, afterBytes: null });
     }
+    return;
+  }
+
+  if (msg.type === 'focus-node') {
+    if (!msg.nodeId) return;
+    await figma.loadAllPagesAsync();
+    const node = await figma.getNodeByIdAsync(msg.nodeId);
+    if (node) {
+      let p: BaseNode | null = node;
+      while (p && p.type !== 'PAGE') p = p.parent;
+      if (p) await figma.setCurrentPageAsync(p as PageNode);
+      figma.currentPage.selection = [node as SceneNode];
+      figma.viewport.scrollAndZoomIntoView([node as SceneNode]);
+    }
+    return;
+  }
+
+  if (msg.type === 'get-stats') {
+    const stats = await readStats();
+    const unlockedAchievements = ACHIEVEMENTS
+      .filter(a => stats.unlockedAchievements.some(u => u.id === a.id))
+      .map(({ id, label, subtitle }) => {
+        const entry = stats.unlockedAchievements.find(u => u.id === id)!;
+        return { id, label, subtitle, unlockedAt: entry.unlockedAt };
+      });
+    figma.ui.postMessage({ type: 'stats', unlockedAchievements });
+    return;
+  }
+
+  if (msg.type === 'reset-storage') {
+    await figma.clientStorage.deleteAsync('stats');
+    figma.ui.postMessage({ type: 'storage-reset' });
+    figma.ui.postMessage({ type: 'stats', unlockedAchievements: [] });
     return;
   }
 
