@@ -1,15 +1,21 @@
 import { useState, useRef, useCallback, useEffect } from 'preact/hooks';
-import type { Panel, ActionBarConfig, AchievementInfo } from './types';
+import type { Panel, ActionBarConfig, AchievementInfo, Theme } from './types';
 import { HomePanel } from './components/HomePanel';
 import { TransitionPanel } from './components/TransitionPanel';
 import { UiKitPanel } from './components/UiKitPanel';
 import { AchievementsPanel } from './components/AchievementsPanel';
+import { SettingsPanel } from './components/SettingsPanel';
 import { ToolNavbar } from './components/ToolNavbar';
 import { Footer } from './components/Footer';
 import { ActionBar } from './components/ActionBar';
 import { Feedback } from './components/Feedback';
 import { AchievementToast } from './components/AchievementToast';
 import { LogoMotion } from './components/LogoMotion';
+
+function applyTheme(theme: Theme) {
+  document.documentElement.classList.remove('light', 'dark');
+  if (theme !== 'auto') document.documentElement.classList.add(theme);
+}
 
 interface ToastState {
   title: string;
@@ -24,6 +30,7 @@ export function App() {
   const [achievement, setAchievement] = useState<{ id: string; label: string; subtitle: string } | null>(null);
   const [unlockedAchievements, setUnlockedAchievements] = useState<AchievementInfo[]>([]);
   const [totalOpens, setTotalOpens] = useState(0);
+  const [theme, setTheme] = useState<Theme>('auto');
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const achievementTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [splashFading, setSplashFading] = useState(false);
@@ -42,6 +49,11 @@ export function App() {
         setUnlockedAchievements(msg.unlockedAchievements ?? []);
         setTotalOpens(msg.totalOpens ?? 0);
       }
+      if (msg?.type === 'theme') {
+        const t = (msg.theme ?? 'auto') as Theme;
+        setTheme(t);
+        applyTheme(t);
+      }
       if (msg?.type === 'achievement-unlocked') {
         setUnlockedAchievements(prev => {
           if (prev.some(a => a.id === msg.id)) return prev;
@@ -56,6 +68,7 @@ export function App() {
     }
     window.addEventListener('message', handleMessage);
     parent.postMessage({ pluginMessage: { type: 'get-stats' } }, '*');
+    parent.postMessage({ pluginMessage: { type: 'get-theme' } }, '*');
     return () => window.removeEventListener('message', handleMessage);
   }, []);
 
@@ -77,6 +90,12 @@ export function App() {
     setActionBar(null);
   }
 
+  function handleThemeChange(t: Theme) {
+    setTheme(t);
+    applyTheme(t);
+    parent.postMessage({ pluginMessage: { type: 'set-theme', theme: t } }, '*');
+  }
+
   const isHome = panel === 'home';
 
   return (
@@ -94,6 +113,7 @@ export function App() {
         )}
         {panel === 'uikit' && <UiKitPanel totalOpens={totalOpens} />}
         {panel === 'achievements' && <AchievementsPanel achievements={unlockedAchievements} />}
+        {panel === 'settings' && <SettingsPanel theme={theme} onThemeChange={handleThemeChange} />}
       </div>
       {!isHome && actionBar && (
         <ActionBar
@@ -109,6 +129,7 @@ export function App() {
         onUiKit={() => navigateTo('uikit', 'UI Kit')}
         hasAchievements={unlockedAchievements.length > 0}
         onAchievements={() => navigateTo('achievements', 'Mes succès')}
+        onSettings={() => navigateTo('settings', 'Paramètres')}
       />
       {toast && (
         <div class="toast visible">

@@ -21,13 +21,7 @@ interface Props {
 }
 
 export function UiKitPanel({ totalOpens }: Props) {
-  const [lightMode, setLightMode] = useState(false);
   const [storageReset, setStorageReset] = useState(false);
-
-  function toggleLightMode(enabled: boolean) {
-    setLightMode(enabled);
-    document.documentElement.classList.toggle('light', enabled);
-  }
 
   function resetStorage() {
     parent.postMessage({ pluginMessage: { type: 'reset-storage' } }, '*');
@@ -50,21 +44,6 @@ export function UiKitPanel({ totalOpens }: Props) {
         <Button appearance="tertiary" onClick={resetStorage}>
           {storageReset ? '✓ Mémoire réinitialisée' : 'Reset mémoire plugin'}
         </Button>
-      </div>
-
-      <div class="uikit-section">
-        <div class="uikit-section-title">Thème</div>
-        <label class="uikit-row" style={{ gap: '8px', cursor: 'pointer', userSelect: 'none' }}>
-          <input
-            type="checkbox"
-            class="checkbox"
-            checked={lightMode}
-            onChange={(e) => toggleLightMode((e.target as HTMLInputElement).checked)}
-          />
-          <span style={{ fontSize: 'var(--text-label-size)', fontWeight: 'var(--text-label-weight)' }}>
-            Light mode
-          </span>
-        </label>
       </div>
 
       <div class="uikit-section">

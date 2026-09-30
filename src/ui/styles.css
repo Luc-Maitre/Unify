@@ -1149,6 +1149,33 @@ footer {
   opacity: var(--opacity-muted);
 }
 
+/* ── Settings panel ──────────────────────────── */
+
+.settings-panel {
+  padding: var(--space-3xl) var(--space-xl);
+  gap: var(--space-2xl);
+}
+
+.settings-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  width: 100%;
+}
+
+.settings-section__label {
+  font-size: var(--text-label-size);
+  font-weight: var(--text-label-weight);
+  color: var(--color-text);
+  opacity: var(--opacity-muted);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.settings-section .scope-row {
+  gap: var(--space-md);
+}
+
 /* ── Achievements panel ──────────────────────── */
 
 .achievements-panel {

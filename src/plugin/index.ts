@@ -59,6 +59,7 @@ figma.ui.onmessage = async (msg: {
   nodeId?: string;
   targetComponentKey?: string;
   mappedProperties?: Record<string, string>;
+  theme?: string;
 }) => {
   if (msg.type === 'get-migrations') {
     figma.ui.postMessage({
@@ -191,6 +192,17 @@ figma.ui.onmessage = async (msg: {
         return { id, label, subtitle, unlockedAt: entry.unlockedAt };
       });
     figma.ui.postMessage({ type: 'stats', unlockedAchievements, totalOpens: stats.totalOpens });
+    return;
+  }
+
+  if (msg.type === 'get-theme') {
+    const theme = await figma.clientStorage.getAsync('theme') as string | undefined;
+    figma.ui.postMessage({ type: 'theme', theme: theme ?? 'auto' });
+    return;
+  }
+
+  if (msg.type === 'set-theme') {
+    if (msg.theme) await figma.clientStorage.setAsync('theme', msg.theme);
     return;
   }
 

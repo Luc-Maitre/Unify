@@ -14,7 +14,9 @@ export interface InstanceInfo {
   mappedProperties: Record<string, string>;
 }
 
-export type Panel = 'home' | 'transition' | 'uikit' | 'achievements';
+export type Panel = 'home' | 'transition' | 'uikit' | 'achievements' | 'settings';
+
+export type Theme = 'auto' | 'light' | 'dark';
 
 export interface AchievementInfo {
   id: string;
