@@ -18,8 +18,8 @@ export function Footer({ onUiKit, onAchievements, hasAchievements, onSettings }:
         {hasAchievements && (
           <button class="footer-settings-btn" onClick={onAchievements}>Mes succès</button>
         )}
-        <button class="footer-settings-btn" onClick={onUiKit}>UI Kit</button>
         <button class="footer-settings-btn" onClick={onSettings}>Paramètres</button>
+        <button class="footer-settings-btn" onClick={onUiKit}>UI Kit</button>
         <span class="footer-version">V.{__APP_VERSION__}</span>
       </div>
     </footer>
