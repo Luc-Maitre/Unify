@@ -16,7 +16,11 @@ import { Tag } from './Tag';
 import { Checkbox } from './Checkbox';
 import { Radio } from './Radio';
 
-export function UiKitPanel() {
+interface Props {
+  totalOpens: number;
+}
+
+export function UiKitPanel({ totalOpens }: Props) {
   const [lightMode, setLightMode] = useState(false);
   const [storageReset, setStorageReset] = useState(false);
 
@@ -35,6 +39,14 @@ export function UiKitPanel() {
     <div class="tool-panel">
       <div class="uikit-section">
         <div class="uikit-section-title">Debug</div>
+        <div class="uikit-row" style={{ alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+          <span style={{ fontSize: 'var(--text-label-size)', fontWeight: 'var(--text-label-weight)', color: 'var(--color-neutral)' }}>
+            Ouvertures
+          </span>
+          <span style={{ fontSize: 'var(--text-label-size)', fontWeight: 600 }}>
+            {totalOpens}
+          </span>
+        </div>
         <Button appearance="tertiary" onClick={resetStorage}>
           {storageReset ? '✓ Mémoire réinitialisée' : 'Reset mémoire plugin'}
         </Button>

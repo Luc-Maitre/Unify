@@ -1,20 +1,27 @@
-import badgeSwap1x from '../assets/achievements/badge-swap.png';
-import badgeSwap2x from '../assets/achievements/badge-swap@2x.png';
-import achievementBadge from '../assets/AchievementBadge.svg';
+import { getBadgeConfig } from '../badgeConfig';
 import closeIcon from '../assets/Close.svg';
 
 interface Props {
+  id: string;
   label: string;
   subtitle: string;
   onClose: () => void;
 }
 
-export function AchievementToast({ label, subtitle, onClose }: Props) {
+export function AchievementToast({ id, label, subtitle, onClose }: Props) {
+  const badge = getBadgeConfig(id);
   return (
     <div class="achievement-toast">
       <div class="achievement-toast__badge">
-        <img src={achievementBadge} class="achievement-badge-bg" alt="" aria-hidden="true" />
-        <img src={badgeSwap1x} srcSet={`${badgeSwap1x} 1x, ${badgeSwap2x} 2x`} class="achievement-toast__badge-img" width="45" height="50" alt="" />
+        <img
+          src={badge.src1x}
+          srcSet={`${badge.src1x} 1x, ${badge.src2x} 2x`}
+          class="achievement-toast__badge-img"
+          width="45"
+          height="50"
+          alt=""
+          style={{ filter: `drop-shadow(0 4px 24px ${badge.shadow})` }}
+        />
         <span class="confetti confetti--1" />
         <span class="confetti confetti--2" />
         <span class="confetti confetti--3" />

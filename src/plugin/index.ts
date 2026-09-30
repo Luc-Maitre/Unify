@@ -6,27 +6,30 @@ import { executeSwaps, resolveTargetComponent, setPropertyValue } from './swap';
 
 figma.showUI(__html__, { width: 600, height: 800, title: 'Unify' });
 figma.ui.postMessage({ type: 'plugin-run' });
+addOpen().catch(console.error);
 
 interface Stats {
   totalSwapped: number;
+  totalOpens: number;
   unlockedAchievements: Array<{ id: string; unlockedAt: string }>;
 }
 
-const ACHIEVEMENTS: { id: string; label: string; subtitle: string; threshold: number }[] = [
-  { id: 'first-swap', label: 'Un bon début', subtitle: 'Premier swap effectué', threshold: 1 },
+const ACHIEVEMENTS: { id: string; label: string; subtitle: string; threshold: number; metric: 'swaps' | 'opens' }[] = [
+  { id: 'first-swap',  label: 'Un bon début',    subtitle: 'Premier swap effectué',    threshold: 1,  metric: 'swaps' },
+  { id: 'open-5',     label: 'Tu reviens !',              subtitle: 'Déjà 5 ouvertures, ça commence bien.',   threshold: 5,  metric: 'opens' },
+  { id: 'open-20',    label: 'Addict (assumé)',           subtitle: '20 ouvertures, Unify entre dans tes habitudes.',              threshold: 20, metric: 'opens' },
+  { id: 'open-50',    label: "Sans Unify, c'est pas pareil", subtitle: '50 ouvertures, et toujours au rendez-vous.',                   threshold: 50, metric: 'opens' },
 ];
 
 async function readStats(): Promise<Stats> {
-  const stored = await figma.clientStorage.getAsync('stats') as Stats | undefined;
-  return stored ?? { totalSwapped: 0, unlockedAchievements: [] };
+  const stored = await figma.clientStorage.getAsync('stats') as Partial<Stats> | undefined;
+  return { totalSwapped: 0, totalOpens: 0, unlockedAchievements: [], ...(stored ?? {}) };
 }
 
-async function addSwaps(count: number): Promise<void> {
-  const stats = await readStats();
-  stats.totalSwapped += count;
+async function checkAndUnlock(stats: Stats, metric: 'swaps' | 'opens', value: number): Promise<void> {
   const unlockedIds = stats.unlockedAchievements.map(u => u.id);
   const newlyUnlocked = ACHIEVEMENTS.filter(
-    a => !unlockedIds.includes(a.id) && stats.totalSwapped >= a.threshold
+    a => a.metric === metric && !unlockedIds.includes(a.id) && value >= a.threshold
   );
   const now = new Date().toISOString();
   for (const a of newlyUnlocked) stats.unlockedAchievements.push({ id: a.id, unlockedAt: now });
@@ -34,6 +37,18 @@ async function addSwaps(count: number): Promise<void> {
   for (const a of newlyUnlocked) {
     figma.ui.postMessage({ type: 'achievement-unlocked', id: a.id, label: a.label, subtitle: a.subtitle, unlockedAt: now });
   }
+}
+
+async function addSwaps(count: number): Promise<void> {
+  const stats = await readStats();
+  stats.totalSwapped += count;
+  await checkAndUnlock(stats, 'swaps', stats.totalSwapped);
+}
+
+async function addOpen(): Promise<void> {
+  const stats = await readStats();
+  stats.totalOpens += 1;
+  await checkAndUnlock(stats, 'opens', stats.totalOpens);
 }
 
 figma.ui.onmessage = async (msg: {
@@ -175,7 +190,7 @@ figma.ui.onmessage = async (msg: {
         const entry = stats.unlockedAchievements.find(u => u.id === id)!;
         return { id, label, subtitle, unlockedAt: entry.unlockedAt };
       });
-    figma.ui.postMessage({ type: 'stats', unlockedAchievements });
+    figma.ui.postMessage({ type: 'stats', unlockedAchievements, totalOpens: stats.totalOpens });
     return;
   }
 
