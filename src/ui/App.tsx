@@ -111,7 +111,16 @@ export function App() {
         {panel === 'transition' && (
           <TransitionPanel onActionBar={setActionBar} onToast={showToast} onHome={navigateHome} />
         )}
-        {panel === 'uikit' && <UiKitPanel totalOpens={totalOpens} />}
+        {panel === 'uikit' && (
+          <UiKitPanel
+            totalOpens={totalOpens}
+            onTriggerAchievement={a => {
+              if (achievementTimer.current) clearTimeout(achievementTimer.current);
+              setAchievement(a);
+              achievementTimer.current = setTimeout(() => setAchievement(null), 4000);
+            }}
+          />
+        )}
         {panel === 'achievements' && <AchievementsPanel achievements={unlockedAchievements} />}
         {panel === 'settings' && <SettingsPanel theme={theme} onThemeChange={handleThemeChange} />}
       </div>

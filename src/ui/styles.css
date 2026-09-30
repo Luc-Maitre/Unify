@@ -1323,15 +1323,59 @@ footer {
   to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes spin-ring {
+  to { --angle: 360deg; }
+}
+
+@keyframes ring-appear {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes badge-glow-pulse {
+  0%, 100% { filter: drop-shadow(0 4px 12px var(--glow-hi)); }
+  50%       { filter: drop-shadow(0 4px 28px var(--glow-hi)); }
+}
+
 .achievement-toast {
   position: relative;
   display: flex;
   align-items: center;
   gap: 20px;
   background: var(--color-surface);
-  border: 1px solid var(--color-primary);
+  border: 1px solid transparent;
   border-radius: var(--radius-md);
   padding: 16px 24px;
+}
+
+.achievement-toast::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: calc(var(--radius-md) + 1px);
+  padding: 1px;
+  background: conic-gradient(
+    from var(--angle),
+    transparent 0%,
+    transparent 30%,
+    var(--glow-hi) 50%,
+    transparent 70%,
+    transparent 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  animation:
+    spin-ring  2.4s linear  0.5s infinite,
+    ring-appear 0.3s ease   0.4s both;
+  pointer-events: none;
 }
 
 .achievement-toast__badge {
@@ -1342,7 +1386,7 @@ footer {
 }
 
 .achievement-toast__badge-img {
-  filter: drop-shadow(0px 4px 12px rgba(6, 214, 160, 0.6));
+  animation: badge-glow-pulse 2.6s ease-in-out infinite;
 }
 
 .achievement-toast__content {

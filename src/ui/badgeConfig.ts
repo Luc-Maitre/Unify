@@ -11,13 +11,14 @@ export interface BadgeConfig {
   src1x: string;
   src2x: string;
   shadow: string;
+  shimmer: string;
 }
 
 const BADGE_CONFIG: Record<string, BadgeConfig> = {
-  'first-swap': { src1x: badgeSwap1x,   src2x: badgeSwap2x,   shadow: 'rgba(6, 214, 160, 0.60)'   },
-  'open-5':     { src1x: badgeOpen51x,  src2x: badgeOpen52x,  shadow: 'rgba(184, 115, 79, 0.60)'  },
-  'open-20':    { src1x: badgeOpen201x, src2x: badgeOpen202x, shadow: 'rgba(174, 184, 186, 0.60)' },
-  'open-50':    { src1x: badgeOpen501x, src2x: badgeOpen502x, shadow: 'rgba(214, 169, 59, 0.60)'  },
+  'first-swap': { src1x: badgeSwap1x,   src2x: badgeSwap2x,   shadow: 'rgba(6, 214, 160, 0.60)',   shimmer: '#06D6A0' },
+  'open-5':     { src1x: badgeOpen51x,  src2x: badgeOpen52x,  shadow: 'rgba(184, 115, 79, 0.60)',  shimmer: '#B8734F' },
+  'open-20':    { src1x: badgeOpen201x, src2x: badgeOpen202x, shadow: 'rgba(174, 184, 186, 0.60)', shimmer: '#AEB8BA' },
+  'open-50':    { src1x: badgeOpen501x, src2x: badgeOpen502x, shadow: 'rgba(214, 169, 59, 0.60)',  shimmer: '#D6A93B' },
 };
 
 const FALLBACK: BadgeConfig = BADGE_CONFIG['first-swap'];

@@ -11,7 +11,7 @@ interface Props {
 export function AchievementToast({ id, label, subtitle, onClose }: Props) {
   const badge = getBadgeConfig(id);
   return (
-    <div class="achievement-toast">
+    <div class="achievement-toast" style={{ '--glow-hi': badge.shimmer } as preact.JSX.CSSProperties}>
       <div class="achievement-toast__badge">
         <img
           src={badge.src1x}
@@ -20,7 +20,6 @@ export function AchievementToast({ id, label, subtitle, onClose }: Props) {
           width="45"
           height="50"
           alt=""
-          style={{ filter: `drop-shadow(0 4px 24px ${badge.shadow})` }}
         />
         <span class="confetti confetti--1" />
         <span class="confetti confetti--2" />

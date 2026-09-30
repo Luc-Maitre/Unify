@@ -1,4 +1,4 @@
-import { useState } from 'preact/hooks';
+import { useState, useRef } from 'preact/hooks';
 import cursorIcon from '../assets/Cursor.svg';
 import fileIcon from '../assets/File.svg';
 import megaphoneIcon from '../assets/Megaphone.svg';
@@ -16,12 +16,21 @@ import { Tag } from './Tag';
 import { Checkbox } from './Checkbox';
 import { Radio } from './Radio';
 
+const DEMO_ACHIEVEMENTS = [
+  { id: 'first-swap', label: 'Premier échange',  subtitle: 'Premier swap effectué'   },
+  { id: 'open-5',    label: 'Premiers pas',      subtitle: 'Plugin ouvert 5 fois'    },
+  { id: 'open-20',   label: 'Habitué',           subtitle: 'Plugin ouvert 20 fois'   },
+  { id: 'open-50',   label: 'Fidèle au poste',   subtitle: 'Plugin ouvert 50 fois'   },
+];
+
 interface Props {
   totalOpens: number;
+  onTriggerAchievement: (a: { id: string; label: string; subtitle: string }) => void;
 }
 
-export function UiKitPanel({ totalOpens }: Props) {
+export function UiKitPanel({ totalOpens, onTriggerAchievement }: Props) {
   const [storageReset, setStorageReset] = useState(false);
+  const achievementIndex = useRef(0);
 
   function resetStorage() {
     parent.postMessage({ pluginMessage: { type: 'reset-storage' } }, '*');
@@ -44,6 +53,14 @@ export function UiKitPanel({ totalOpens }: Props) {
         <Button appearance="tertiary" onClick={resetStorage}>
           {storageReset ? '✓ Mémoire réinitialisée' : 'Reset mémoire plugin'}
         </Button>
+        <div style={{ marginTop: '8px' }}>
+          <Button appearance="tertiary" onClick={() => {
+            onTriggerAchievement(DEMO_ACHIEVEMENTS[achievementIndex.current % DEMO_ACHIEVEMENTS.length]);
+            achievementIndex.current++;
+          }}>
+            Trigger achievement
+          </Button>
+        </div>
       </div>
 
       <div class="uikit-section">
