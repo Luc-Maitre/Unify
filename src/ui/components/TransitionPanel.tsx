@@ -324,9 +324,9 @@ export function TransitionPanel({ onActionBar, onToast, onHome }: Props) {
                   <div class="result-item__info">
                     <div class="result-item__name">{inst.name}</div>
                     <div
-                    class="result-item__location result-item__location--link"
-                    onClick={e => { e.stopPropagation(); parent.postMessage({ pluginMessage: { type: 'focus-node', nodeId: inst.id } }, '*'); }}
-                  >{inst.pageName} · {inst.parentName}</div>
+                      class="result-item__location result-item__location--link"
+                      onClick={e => { e.stopPropagation(); parent.postMessage({ pluginMessage: { type: 'focus-node', nodeId: inst.id } }, '*'); }}
+                    >{inst.pageName} · {inst.parentName}</div>
                   </div>
                   {Object.entries(inst.properties).map(([k, v]) => (
                     <Tag key={k} variant="default">{`${k}: ${v}`}</Tag>

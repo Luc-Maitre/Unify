@@ -16,10 +16,6 @@ export interface Migration {
   pairs: ComponentPair[];
 }
 
-// ─────────────────────────────────────────────
-// MIGRATION REGISTRY
-// Add a new entry here to support a new swap.
-// ─────────────────────────────────────────────
 export const MIGRATIONS: Migration[] = [
   {
     id: "deprecated-button",

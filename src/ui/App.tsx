@@ -36,6 +36,18 @@ export function App() {
   const [splashFading, setSplashFading] = useState(false);
   const [splashGone, setSplashGone] = useState(false);
 
+  const showToast = useCallback((title: string, variant: 'success' | 'error' | 'warning') => {
+    if (toastTimer.current) clearTimeout(toastTimer.current);
+    setToast({ title, variant });
+    toastTimer.current = setTimeout(() => setToast(null), 3500);
+  }, []);
+
+  const showAchievementToast = useCallback((a: { id: string; label: string; subtitle: string }) => {
+    if (achievementTimer.current) clearTimeout(achievementTimer.current);
+    setAchievement(a);
+    achievementTimer.current = setTimeout(() => setAchievement(null), 4000);
+  }, []);
+
   useEffect(() => {
     const fadeTimer = setTimeout(() => setSplashFading(true), 2000);
     const removeTimer = setTimeout(() => setSplashGone(true), 2400);
@@ -59,10 +71,8 @@ export function App() {
           if (prev.some(a => a.id === msg.id)) return prev;
           return [...prev, { id: msg.id, label: msg.label, subtitle: msg.subtitle, unlockedAt: msg.unlockedAt }];
         });
-        if (achievementTimer.current) clearTimeout(achievementTimer.current);
         achievementTimer.current = setTimeout(() => {
-          setAchievement({ id: msg.id, label: msg.label, subtitle: msg.subtitle });
-          achievementTimer.current = setTimeout(() => setAchievement(null), 4000);
+          showAchievementToast({ id: msg.id, label: msg.label, subtitle: msg.subtitle });
         }, 3000);
       }
     }
@@ -70,13 +80,7 @@ export function App() {
     parent.postMessage({ pluginMessage: { type: 'get-stats' } }, '*');
     parent.postMessage({ pluginMessage: { type: 'get-theme' } }, '*');
     return () => window.removeEventListener('message', handleMessage);
-  }, []);
-
-  const showToast = useCallback((title: string, variant: 'success' | 'error' | 'warning') => {
-    if (toastTimer.current) clearTimeout(toastTimer.current);
-    setToast({ title, variant });
-    toastTimer.current = setTimeout(() => setToast(null), 3500);
-  }, []);
+  }, [showAchievementToast]);
 
   function navigateTo(panelId: string, title: string) {
     setPanel(panelId as Panel);
@@ -114,11 +118,7 @@ export function App() {
         {panel === 'uikit' && (
           <UiKitPanel
             totalOpens={totalOpens}
-            onTriggerAchievement={a => {
-              if (achievementTimer.current) clearTimeout(achievementTimer.current);
-              setAchievement(a);
-              achievementTimer.current = setTimeout(() => setAchievement(null), 4000);
-            }}
+            onTriggerAchievement={showAchievementToast}
           />
         )}
         {panel === 'achievements' && <AchievementsPanel achievements={unlockedAchievements} />}
