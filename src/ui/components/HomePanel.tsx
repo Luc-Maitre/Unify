@@ -8,8 +8,7 @@ import type { AwarenessContent } from '../awarenessService';
 const FILTERS = [
   { label: 'Tout', value: 'all' },
   { label: 'Rebranding', value: 'rebranding' },
-  { label: 'Quotidien', value: 'quotidien' },
-  { label: 'Review', value: 'review' },
+  { label: 'Nettoyage', value: 'nettoyage' },
 ];
 
 interface Props {

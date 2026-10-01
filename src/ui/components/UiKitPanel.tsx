@@ -1,8 +1,8 @@
 import { useRef } from 'preact/hooks';
-import cursorIcon from '../assets/Cursor.svg';
-import fileIcon from '../assets/File.svg';
-import megaphoneIcon from '../assets/Megaphone.svg';
-import sortIcon from '../assets/Sort.svg';
+import cursorIcon from '../assets/Cursor.svg?raw';
+import fileIcon from '../assets/File.svg?raw';
+import megaphoneIcon from '../assets/Megaphone.svg?raw';
+import sortIcon from '../assets/Sort.svg?raw';
 import { CheckboxCard } from './CheckboxCard';
 import { LogoMotion } from './LogoMotion';
 import { ActionBar } from './ActionBar';
@@ -116,12 +116,12 @@ export function UiKitPanel({ totalOpens, onTriggerAchievement }: Props) {
         <div class="scope-row" style={{ pointerEvents: 'none' }}>
           <SelectionCard
             title="Tout le document"
-            icon={<img src={fileIcon} alt="" />}
+            icon={<span style={{ display: 'contents' }} dangerouslySetInnerHTML={{ __html: fileIcon }} />}
           />
           <SelectionCard
             title="Sélection"
             selected
-            icon={<img src={cursorIcon} alt="" />}
+            icon={<span style={{ display: 'contents' }} dangerouslySetInnerHTML={{ __html: cursorIcon }} />}
           />
         </div>
       </div>
@@ -270,19 +270,19 @@ export function UiKitPanel({ totalOpens, onTriggerAchievement }: Props) {
         <div class="uikit-section-title">Icônes</div>
         <div class="uikit-row uikit-wrap" style={{ gap: '16px' }}>
           <div class="icon-tile-group">
-            <div class="icon-tile"><img src={cursorIcon} width="16" height="16" alt="" /></div>
+            <div class="icon-tile"><span style={{ display: 'contents' }} dangerouslySetInnerHTML={{ __html: cursorIcon }} /></div>
             <span class="icon-tile-label">Cursor</span>
           </div>
           <div class="icon-tile-group">
-            <div class="icon-tile"><img src={fileIcon} width="16" height="16" alt="" /></div>
+            <div class="icon-tile"><span style={{ display: 'contents' }} dangerouslySetInnerHTML={{ __html: fileIcon }} /></div>
             <span class="icon-tile-label">File</span>
           </div>
           <div class="icon-tile-group">
-            <div class="icon-tile"><img src={megaphoneIcon} width="16" height="16" alt="" /></div>
+            <div class="icon-tile"><span style={{ display: 'contents' }} dangerouslySetInnerHTML={{ __html: megaphoneIcon }} /></div>
             <span class="icon-tile-label">Megaphone</span>
           </div>
           <div class="icon-tile-group">
-            <div class="icon-tile"><img src={sortIcon} width="16" height="16" alt="" /></div>
+            <div class="icon-tile"><span style={{ display: 'contents' }} dangerouslySetInnerHTML={{ __html: sortIcon }} /></div>
             <span class="icon-tile-label">Sort</span>
           </div>
           <div class="icon-tile-group">
