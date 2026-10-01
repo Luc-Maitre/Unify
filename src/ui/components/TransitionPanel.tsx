@@ -6,8 +6,8 @@ import { Stepper } from './Stepper';
 import { Tag } from './Tag';
 import { Checkbox } from './Checkbox';
 import { Badge } from './Badge';
-import fileIcon from '../assets/File.svg';
-import cursorIcon from '../assets/Cursor.svg';
+import fileIcon from '../assets/File.svg?raw';
+import cursorIcon from '../assets/Cursor.svg?raw';
 import circleCheckIcon from '../assets/CircleCheck.svg';
 import { PreviewPair } from './PreviewPair';
 
@@ -253,13 +253,13 @@ export function TransitionPanel({ onActionBar, onToast, onHome }: Props) {
           <div class="scope-row">
             <SelectionCard
               title="Tout le document"
-              icon={<img src={fileIcon} alt="" />}
+              icon={<span style={{ display: 'contents' }} dangerouslySetInnerHTML={{ __html: fileIcon }} />}
               selected={scope === 'document'}
               onClick={() => setScope('document')}
             />
             <SelectionCard
               title="Sélection"
-              icon={<img src={cursorIcon} alt="" />}
+              icon={<span style={{ display: 'contents' }} dangerouslySetInnerHTML={{ __html: cursorIcon }} />}
               selected={scope === 'selection'}
               onClick={() => setScope('selection')}
             />

@@ -480,17 +480,19 @@ body {
   flex-shrink: 0;
   background: color-mix(in srgb, var(--color-primary) 40%, transparent);
   border-radius: var(--radius-md);
-  color: var(--color-icon);
+  color: var(--color-text);
 }
 
 .icon-container--medium { width: 40px; height: 40px; }
 .icon-container--large  { width: 56px; height: 56px; }
 
 .icon-container--medium > svg,
-.icon-container--medium > img { width: 16px; height: 16px; }
+.icon-container--medium > img,
+.icon-container--medium > span > svg { width: 16px; height: 16px; }
 
 .icon-container--large > svg,
-.icon-container--large > img  { width: 32px; height: 32px; }
+.icon-container--large > img,
+.icon-container--large > span > svg  { width: 32px; height: 32px; }
 
 
 .tool-card-title {
@@ -810,6 +812,12 @@ body {
 
 .btn:disabled { opacity: var(--opacity-disabled); cursor: default; }
 
+.btn .spinner {
+  border-color: color-mix(in srgb, currentColor 30%, transparent);
+  border-top-color: currentColor;
+  margin-right: 0;
+}
+
 .btn--primary {
   background: var(--color-primary);
   color: var(--color-on-primary);
@@ -831,6 +839,13 @@ body {
 }
 .btn--tertiary:hover:not(:disabled) { background: color-mix(in srgb, currentColor 6%, transparent); }
 .btn--tertiary:active:not(:disabled) { background: color-mix(in srgb, currentColor 10%, transparent); }
+
+.btn--error {
+  background: var(--color-error);
+  color: #ffffff;
+}
+.btn--error:hover:not(:disabled) { background: color-mix(in srgb, var(--color-error) 85%, #000); }
+.btn--error:active:not(:disabled) { background: color-mix(in srgb, var(--color-error) 72%, #000); }
 
 /* ── Badge ───────────────────────────────────── */
 

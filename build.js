@@ -1,5 +1,20 @@
 const esbuild = require('esbuild');
 const fs = require('fs');
+const path = require('path');
+
+const rawSvgPlugin = {
+  name: 'raw-svg',
+  setup(build) {
+    build.onResolve({ filter: /\.svg\?raw$/ }, args => ({
+      path: path.resolve(args.resolveDir, args.path.replace('?raw', '')),
+      namespace: 'raw-svg',
+    }));
+    build.onLoad({ filter: /.*/, namespace: 'raw-svg' }, async args => {
+      const contents = await fs.promises.readFile(args.path, 'utf8');
+      return { contents: `export default ${JSON.stringify(contents)}`, loader: 'js' };
+    });
+  },
+};
 
 const watch = process.argv.includes('--watch');
 
@@ -12,6 +27,7 @@ async function buildUI() {
     target: 'es2020',
     jsx: 'automatic',
     jsxImportSource: 'preact',
+    plugins: [rawSvgPlugin],
     loader: { '.svg': 'dataurl', '.png': 'dataurl' },
     define: { __APP_VERSION__: JSON.stringify(version) },
   });

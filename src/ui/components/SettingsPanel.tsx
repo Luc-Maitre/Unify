@@ -1,8 +1,10 @@
-import sunMoonIcon from '../assets/SunMoon.svg';
-import sunIcon from '../assets/Sun.svg';
-import moonStarIcon from '../assets/MoonStar.svg';
+import { useState } from 'preact/hooks';
+import sunMoonIcon from '../assets/SunMoon.svg?raw';
+import sunIcon from '../assets/Sun.svg?raw';
+import moonStarIcon from '../assets/MoonStar.svg?raw';
 import type { Theme } from '../types';
 import { SelectionCard } from './SelectionCard';
+import { Button } from './Button';
 
 interface Props {
   theme: Theme;
@@ -16,6 +18,15 @@ const THEME_OPTIONS: { id: Theme; label: string; icon: string }[] = [
 ];
 
 export function SettingsPanel({ theme, onThemeChange }: Props) {
+  const [resetDone, setResetDone] = useState(false);
+
+  function resetStorage() {
+    parent.postMessage({ pluginMessage: { type: 'reset-storage' } }, '*');
+    onThemeChange('auto');
+    setResetDone(true);
+    setTimeout(() => setResetDone(false), 2000);
+  }
+
   return (
     <div class="tool-panel settings-panel">
       <div class="settings-section">
@@ -25,11 +36,19 @@ export function SettingsPanel({ theme, onThemeChange }: Props) {
             <SelectionCard
               key={opt.id}
               title={opt.label}
-              icon={<img src={opt.icon} width="16" height="16" alt="" />}
+              icon={<span style={{ display: 'contents' }} dangerouslySetInnerHTML={{ __html: opt.icon }} />}
               selected={theme === opt.id}
               onClick={() => onThemeChange(opt.id)}
             />
           ))}
+        </div>
+      </div>
+      <div class="settings-section">
+        <span class="settings-section__label">Zone dangereuse</span>
+        <div style={{ alignSelf: 'flex-start' }}>
+          <Button appearance="error" onClick={resetStorage}>
+            {resetDone ? '✓ Mémoire réinitialisée' : 'Reset de la mémoire du plugin'}
+          </Button>
         </div>
       </div>
     </div>

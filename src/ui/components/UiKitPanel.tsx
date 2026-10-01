@@ -1,4 +1,4 @@
-import { useState, useRef } from 'preact/hooks';
+import { useRef } from 'preact/hooks';
 import cursorIcon from '../assets/Cursor.svg';
 import fileIcon from '../assets/File.svg';
 import megaphoneIcon from '../assets/Megaphone.svg';
@@ -29,14 +29,7 @@ interface Props {
 }
 
 export function UiKitPanel({ totalOpens, onTriggerAchievement }: Props) {
-  const [storageReset, setStorageReset] = useState(false);
   const achievementIndex = useRef(0);
-
-  function resetStorage() {
-    parent.postMessage({ pluginMessage: { type: 'reset-storage' } }, '*');
-    setStorageReset(true);
-    setTimeout(() => setStorageReset(false), 2000);
-  }
 
   return (
     <div class="tool-panel">
@@ -50,17 +43,12 @@ export function UiKitPanel({ totalOpens, onTriggerAchievement }: Props) {
             {totalOpens}
           </span>
         </div>
-        <Button appearance="tertiary" onClick={resetStorage}>
-          {storageReset ? '✓ Mémoire réinitialisée' : 'Reset mémoire plugin'}
+        <Button appearance="tertiary" onClick={() => {
+          onTriggerAchievement(DEMO_ACHIEVEMENTS[achievementIndex.current % DEMO_ACHIEVEMENTS.length]);
+          achievementIndex.current++;
+        }}>
+          Trigger achievement
         </Button>
-        <div style={{ marginTop: '8px' }}>
-          <Button appearance="tertiary" onClick={() => {
-            onTriggerAchievement(DEMO_ACHIEVEMENTS[achievementIndex.current % DEMO_ACHIEVEMENTS.length]);
-            achievementIndex.current++;
-          }}>
-            Trigger achievement
-          </Button>
-        </div>
       </div>
 
       <div class="uikit-section">
