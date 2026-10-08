@@ -3,10 +3,20 @@
 import { MIGRATIONS } from './migrations';
 import { findDeprecatedInstances } from './scan';
 import { executeSwaps, resolveTargetComponent, setPropertyValue } from './swap';
+import { scanStyleShift, executeStyleShift, resetInstanceColorOverrides, applyManualSelections } from './styleShift';
+import type { ManualSelection } from './styleShift';
 
 figma.showUI(__html__, { width: 600, height: 800, title: 'Unify' });
 figma.ui.postMessage({ type: 'plugin-run' });
 addOpen().catch(console.error);
+
+// Notify UI whenever Figma selection changes (used by StyleShiftPanel)
+figma.on('selectionchange', () => {
+  figma.ui.postMessage({
+    type: 'style-shift-selection',
+    count: figma.currentPage.selection.length,
+  });
+});
 
 interface Stats {
   totalSwapped: number;
@@ -60,6 +70,7 @@ figma.ui.onmessage = async (msg: {
   targetComponentKey?: string;
   mappedProperties?: Record<string, string>;
   theme?: string;
+  selections?: ManualSelection[];
 }) => {
   if (msg.type === 'get-migrations') {
     figma.ui.postMessage({
@@ -210,6 +221,65 @@ figma.ui.onmessage = async (msg: {
     await figma.clientStorage.deleteAsync('stats');
     figma.ui.postMessage({ type: 'storage-reset' });
     figma.ui.postMessage({ type: 'stats', unlockedAchievements: [] });
+    return;
+  }
+
+  if (msg.type === 'style-shift-scan') {
+    const sel = figma.currentPage.selection;
+    if (sel.length !== 1) {
+      figma.ui.postMessage({ type: 'style-shift-scan-result', items: [] });
+      return;
+    }
+    try {
+      const { items, sparkVarNames } = await scanStyleShift(sel[0].id);
+      figma.ui.postMessage({ type: 'style-shift-scan-result', items, sparkVarNames });
+    } catch (e) {
+      console.error('[StyleShift] scan error:', e);
+      figma.ui.postMessage({ type: 'style-shift-scan-result', items: [], sparkVarNames: [], error: String(e) });
+    }
+    return;
+  }
+
+  if (msg.type === 'style-shift-reset-instances') {
+    const sel = figma.currentPage.selection;
+    if (sel.length !== 1) return;
+    try {
+      const result = await resetInstanceColorOverrides(sel[0].id);
+      figma.ui.postMessage({ type: 'style-shift-reset-result', reset: result.reset });
+      const { items, sparkVarNames } = await scanStyleShift(sel[0].id);
+      figma.ui.postMessage({ type: 'style-shift-scan-result', items, sparkVarNames });
+    } catch (e) {
+      console.error('[StyleShift] reset error:', e);
+      figma.ui.postMessage({ type: 'style-shift-reset-result', reset: 0 });
+    }
+    return;
+  }
+
+  if (msg.type === 'style-shift-execute') {
+    const sel = figma.currentPage.selection;
+    if (sel.length !== 1) return;
+    try {
+      const result = await executeStyleShift(sel[0].id);
+      figma.ui.postMessage({ type: 'style-shift-execute-result', converted: result.converted });
+      const { items, sparkVarNames } = await scanStyleShift(sel[0].id);
+      figma.ui.postMessage({ type: 'style-shift-scan-result', items, sparkVarNames });
+    } catch (e) {
+      figma.ui.postMessage({ type: 'error', message: String(e) });
+    }
+    return;
+  }
+
+  if (msg.type === 'style-shift-apply-manual') {
+    const sel = figma.currentPage.selection;
+    if (sel.length !== 1 || !msg.selections?.length) return;
+    try {
+      const result = await applyManualSelections(msg.selections);
+      figma.ui.postMessage({ type: 'style-shift-execute-result', converted: result.converted });
+      const { items, sparkVarNames } = await scanStyleShift(sel[0].id);
+      figma.ui.postMessage({ type: 'style-shift-scan-result', items, sparkVarNames });
+    } catch (e) {
+      figma.ui.postMessage({ type: 'error', message: String(e) });
+    }
     return;
   }
 

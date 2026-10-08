@@ -14,7 +14,20 @@ export interface InstanceInfo {
   mappedProperties: Record<string, string>;
 }
 
-export type Panel = 'home' | 'transition' | 'uikit' | 'achievements' | 'settings';
+export type Panel = 'home' | 'transition' | 'style-shift' | 'uikit' | 'achievements' | 'settings';
+
+export type ComponentKind = 'local' | 'remote' | 'spark';
+
+export interface StyleItem {
+  nodeId: string;
+  nodeName: string;
+  styleName: string;
+  targetName: string;
+  type: 'fill' | 'stroke';
+  /** null = not inside any instance */
+  componentKind: ComponentKind | null;
+  hasMatch: boolean;
+}
 
 export type Theme = 'auto' | 'light' | 'dark';
 

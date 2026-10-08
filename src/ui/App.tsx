@@ -5,6 +5,7 @@ import { TransitionPanel } from './components/TransitionPanel';
 import { UiKitPanel } from './components/UiKitPanel';
 import { AchievementsPanel } from './components/AchievementsPanel';
 import { SettingsPanel } from './components/SettingsPanel';
+import { StyleShiftPanel } from './components/StyleShiftPanel';
 import { ToolNavbar } from './components/ToolNavbar';
 import { Footer } from './components/Footer';
 import { ActionBar } from './components/ActionBar';
@@ -121,6 +122,7 @@ export function App() {
             onTriggerAchievement={showAchievementToast}
           />
         )}
+        {panel === 'style-shift' && <StyleShiftPanel onActionBar={setActionBar} onToast={showToast} />}
         {panel === 'achievements' && <AchievementsPanel achievements={unlockedAchievements} />}
         {panel === 'settings' && <SettingsPanel theme={theme} onThemeChange={handleThemeChange} />}
       </div>

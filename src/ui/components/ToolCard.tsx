@@ -9,7 +9,7 @@ interface Props {
 
 export function ToolCard({ tool, onNavigate }: Props) {
   function handleClick() {
-    if (tool.status === 'active' && tool.panelId) {
+    if ((tool.status === 'active' || tool.status === 'new') && tool.panelId) {
       onNavigate?.(tool.panelId, tool.title);
     }
   }
