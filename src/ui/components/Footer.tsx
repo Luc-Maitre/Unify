@@ -7,7 +7,7 @@ interface Props {
   onSettings: () => void;
 }
 
-export function Footer({ onUiKit, onAchievements, hasAchievements, onSettings }: Props) {
+export function Footer({ onAchievements, hasAchievements, onSettings }: Props) {
   return (
     <footer id="footer-home">
       <div class="footer-brand">
@@ -19,7 +19,6 @@ export function Footer({ onUiKit, onAchievements, hasAchievements, onSettings }:
           <button class="footer-settings-btn" onClick={onAchievements}>Mes succès</button>
         )}
         <button class="footer-settings-btn" onClick={onSettings}>Paramètres</button>
-        <button class="footer-settings-btn" onClick={onUiKit}>UI Kit</button>
         <span class="footer-version">V.{__APP_VERSION__}</span>
       </div>
     </footer>
