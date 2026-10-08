@@ -1787,3 +1787,30 @@ footer {
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
+
+/* ── Crazy Detacher ───────────────────────────────── */
+
+.crazy-detacher-panel {
+  padding: var(--space-3xl) var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+}
+
+.crazy-detacher-panel .scope-row {
+  gap: var(--space-md);
+}
+
+.tool-description {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.tool-description p {
+  margin: 0;
+  font-size: var(--text-body-size);
+  font-weight: var(--text-body-weight);
+  line-height: 1.5;
+  color: var(--color-text);
+}

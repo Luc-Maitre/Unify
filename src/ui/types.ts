@@ -14,7 +14,7 @@ export interface InstanceInfo {
   mappedProperties: Record<string, string>;
 }
 
-export type Panel = 'home' | 'transition' | 'style-shift' | 'uikit' | 'achievements' | 'settings';
+export type Panel = 'home' | 'transition' | 'style-shift' | 'uikit' | 'achievements' | 'settings' | 'crazy-detacher';
 
 export type ComponentKind = 'local' | 'remote' | 'spark';
 

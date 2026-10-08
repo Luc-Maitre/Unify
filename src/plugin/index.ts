@@ -5,6 +5,7 @@ import { findDeprecatedInstances } from './scan';
 import { executeSwaps, resolveTargetComponent, setPropertyValue } from './swap';
 import { scanStyleShift, executeStyleShift, resetInstanceColorOverrides, applyManualSelections } from './styleShift';
 import type { ManualSelection } from './styleShift';
+import { runCrazyDetacher } from './crazyDetacher';
 
 figma.showUI(__html__, { width: 600, height: 800, title: 'Unify' });
 figma.ui.postMessage({ type: 'plugin-run' });
@@ -279,6 +280,18 @@ figma.ui.onmessage = async (msg: {
       figma.ui.postMessage({ type: 'style-shift-scan-result', items, sparkVarNames });
     } catch (e) {
       figma.ui.postMessage({ type: 'error', message: String(e) });
+    }
+    return;
+  }
+
+  if (msg.type === 'crazy-detacher-run') {
+    const scope = (msg as { type: string; scope?: string }).scope === 'selection' ? 'selection' : 'page';
+    try {
+      const selectionNodes = scope === 'selection' ? figma.currentPage.selection : undefined;
+      const result = await runCrazyDetacher(scope, selectionNodes);
+      figma.ui.postMessage({ type: 'crazy-detacher-result', ...result });
+    } catch (e) {
+      figma.ui.postMessage({ type: 'crazy-detacher-error', message: String(e) });
     }
     return;
   }

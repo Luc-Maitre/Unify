@@ -6,6 +6,7 @@ import { UiKitPanel } from './components/UiKitPanel';
 import { AchievementsPanel } from './components/AchievementsPanel';
 import { SettingsPanel } from './components/SettingsPanel';
 import { StyleShiftPanel } from './components/StyleShiftPanel';
+import { CrazyDetacherPanel } from './components/CrazyDetacherPanel';
 import { ToolNavbar } from './components/ToolNavbar';
 import { Footer } from './components/Footer';
 import { ActionBar } from './components/ActionBar';
@@ -123,6 +124,7 @@ export function App() {
           />
         )}
         {panel === 'style-shift' && <StyleShiftPanel onActionBar={setActionBar} onToast={showToast} />}
+        {panel === 'crazy-detacher' && <CrazyDetacherPanel onActionBar={setActionBar} onToast={showToast} onHome={navigateHome} />}
         {panel === 'achievements' && <AchievementsPanel achievements={unlockedAchievements} />}
         {panel === 'settings' && <SettingsPanel theme={theme} onThemeChange={handleThemeChange} />}
       </div>
