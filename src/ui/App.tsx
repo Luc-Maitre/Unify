@@ -33,6 +33,7 @@ export function App() {
   const [unlockedAchievements, setUnlockedAchievements] = useState<AchievementInfo[]>([]);
   const [totalOpens, setTotalOpens] = useState(0);
   const [theme, setTheme] = useState<Theme>('auto');
+  const [advancedTools, setAdvancedTools] = useState(false);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const achievementTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [splashFading, setSplashFading] = useState(false);
@@ -68,6 +69,9 @@ export function App() {
         setTheme(t);
         applyTheme(t);
       }
+      if (msg?.type === 'advanced-tools') {
+        setAdvancedTools(msg.enabled ?? false);
+      }
       if (msg?.type === 'achievement-unlocked') {
         setUnlockedAchievements(prev => {
           if (prev.some(a => a.id === msg.id)) return prev;
@@ -81,6 +85,7 @@ export function App() {
     window.addEventListener('message', handleMessage);
     parent.postMessage({ pluginMessage: { type: 'get-stats' } }, '*');
     parent.postMessage({ pluginMessage: { type: 'get-theme' } }, '*');
+    parent.postMessage({ pluginMessage: { type: 'get-advanced-tools' } }, '*');
     return () => window.removeEventListener('message', handleMessage);
   }, [showAchievementToast]);
 
@@ -102,6 +107,11 @@ export function App() {
     parent.postMessage({ pluginMessage: { type: 'set-theme', theme: t } }, '*');
   }
 
+  function handleAdvancedToolsChange(enabled: boolean) {
+    setAdvancedTools(enabled);
+    parent.postMessage({ pluginMessage: { type: 'set-advanced-tools', enabled } }, '*');
+  }
+
   const isHome = panel === 'home';
 
   return (
@@ -113,7 +123,7 @@ export function App() {
       )}
       {!isHome && <ToolNavbar title={panelTitle} onBack={navigateHome} />}
       <div class="main">
-        {panel === 'home' && <HomePanel onNavigate={navigateTo} />}
+        {panel === 'home' && <HomePanel onNavigate={navigateTo} advancedTools={advancedTools} />}
         {panel === 'transition' && (
           <TransitionPanel onActionBar={setActionBar} onToast={showToast} onHome={navigateHome} />
         )}
@@ -126,7 +136,7 @@ export function App() {
         {panel === 'style-shift' && <StyleShiftPanel onActionBar={setActionBar} onToast={showToast} />}
         {panel === 'crazy-detacher' && <CrazyDetacherPanel onActionBar={setActionBar} onToast={showToast} onHome={navigateHome} />}
         {panel === 'achievements' && <AchievementsPanel achievements={unlockedAchievements} />}
-        {panel === 'settings' && <SettingsPanel theme={theme} onThemeChange={handleThemeChange} />}
+        {panel === 'settings' && <SettingsPanel theme={theme} onThemeChange={handleThemeChange} advancedTools={advancedTools} onAdvancedToolsChange={handleAdvancedToolsChange} />}
       </div>
       {!isHome && actionBar && (
         <ActionBar

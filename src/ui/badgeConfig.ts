@@ -26,3 +26,5 @@ const FALLBACK: BadgeConfig = BADGE_CONFIG['first-swap'];
 export function getBadgeConfig(id: string): BadgeConfig {
   return BADGE_CONFIG[id] ?? FALLBACK;
 }
+
+export const TOTAL_ACHIEVEMENTS = Object.keys(BADGE_CONFIG).length;

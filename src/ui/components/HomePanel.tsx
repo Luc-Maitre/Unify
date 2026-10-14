@@ -13,6 +13,7 @@ const FILTERS = [
 
 interface Props {
   onNavigate: (panelId: string, title: string) => void;
+  advancedTools?: boolean;
 }
 
 const FALLBACK: AwarenessContent = {
@@ -21,7 +22,7 @@ const FALLBACK: AwarenessContent = {
   visible: true,
 };
 
-export function HomePanel({ onNavigate }: Props) {
+export function HomePanel({ onNavigate, advancedTools = false }: Props) {
   const [filter, setFilter] = useState('all');
   const [awareness, setAwareness] = useState<AwarenessContent>(FALLBACK);
 
@@ -38,7 +39,8 @@ export function HomePanel({ onNavigate }: Props) {
   }, []);
 
   const visible = TOOLS.filter(t =>
-    filter === 'all' || t.categories.some(c => c.toLowerCase() === filter.toLowerCase())
+    (!t.advanced || advancedTools) &&
+    (filter === 'all' || t.categories.some(c => c.toLowerCase() === filter.toLowerCase()))
   );
 
   const speakerIcon = (

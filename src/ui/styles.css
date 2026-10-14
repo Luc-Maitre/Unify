@@ -1216,10 +1216,138 @@ footer {
   gap: var(--space-md);
 }
 
+.settings-toggle-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  cursor: pointer;
+}
+
+.settings-toggle-row__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.settings-toggle-row__title {
+  font-size: var(--text-body-size);
+  font-weight: var(--text-body-weight);
+  color: var(--color-text);
+}
+
+.settings-toggle-row__desc {
+  font-size: var(--text-label-size);
+  color: var(--color-text);
+  opacity: var(--opacity-muted);
+}
+
+/* ── Toggle (checkbox styled as switch) ──────── */
+
+.toggle {
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  width: 32px;
+  height: 16px;
+  flex-shrink: 0;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--color-border-hl);
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-sizing: border-box;
+}
+
+.toggle::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -2px;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--color-border-hl);
+  background: transparent;
+  transition: transform 0.2s, background 0.2s;
+  box-sizing: border-box;
+}
+
+.toggle:checked {
+  background: var(--color-primary);
+}
+
+.toggle:checked::after {
+  transform: translateY(-50%) translateX(16px);
+  background: var(--color-on-primary);
+}
+
+.toggle:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
 /* ── Achievements panel ──────────────────────── */
+
+/* ── Progress ────────────────────────────────────── */
+
+.progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  width: 100%;
+}
+
+.progress__label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--text-label-size);
+  font-weight: var(--text-label-weight);
+}
+
+.progress__label {
+  color: var(--color-text);
+}
+
+.progress__tracker {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  white-space: nowrap;
+}
+
+.progress__current {
+  color: var(--color-text);
+}
+
+.progress__sep,
+.progress__total {
+  color: var(--color-neutral);
+}
+
+.progress__bar {
+  height: 12px;
+  border-radius: var(--radius-full);
+  background: var(--color-neutral-container);
+  overflow: hidden;
+}
+
+.progress__fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: var(--color-primary);
+  transition: width 0.5s ease;
+}
+
+/* ── Achievements ────────────────────────────────── */
 
 .achievements-panel {
   padding: var(--space-lg);
+}
+
+.achievements-panel__progress {
+  margin-bottom: var(--space-lg);
 }
 
 .achievements-empty {

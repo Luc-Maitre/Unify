@@ -218,6 +218,18 @@ figma.ui.onmessage = async (msg: {
     return;
   }
 
+  if (msg.type === 'get-advanced-tools') {
+    const value = await figma.clientStorage.getAsync('advancedTools') as boolean | undefined;
+    figma.ui.postMessage({ type: 'advanced-tools', enabled: value ?? false });
+    return;
+  }
+
+  if (msg.type === 'set-advanced-tools') {
+    const m = msg as { type: string; enabled: boolean };
+    await figma.clientStorage.setAsync('advancedTools', m.enabled);
+    return;
+  }
+
   if (msg.type === 'reset-storage') {
     await figma.clientStorage.deleteAsync('stats');
     figma.ui.postMessage({ type: 'storage-reset' });

@@ -5,10 +5,13 @@ import moonStarIcon from '../assets/MoonStar.svg?raw';
 import type { Theme } from '../types';
 import { SelectionCard } from './SelectionCard';
 import { Button } from './Button';
+import { Switch } from './Switch';
 
 interface Props {
   theme: Theme;
   onThemeChange: (t: Theme) => void;
+  advancedTools: boolean;
+  onAdvancedToolsChange: (enabled: boolean) => void;
 }
 
 const THEME_OPTIONS: { id: Theme; label: string; icon: string }[] = [
@@ -17,7 +20,7 @@ const THEME_OPTIONS: { id: Theme; label: string; icon: string }[] = [
   { id: 'dark',  label: 'Sombre',       icon: moonStarIcon },
 ];
 
-export function SettingsPanel({ theme, onThemeChange }: Props) {
+export function SettingsPanel({ theme, onThemeChange, advancedTools, onAdvancedToolsChange }: Props) {
   const [resetDone, setResetDone] = useState(false);
 
   function resetStorage() {
@@ -42,6 +45,19 @@ export function SettingsPanel({ theme, onThemeChange }: Props) {
             />
           ))}
         </div>
+      </div>
+      <div class="settings-section">
+        <span class="settings-section__label">Outils</span>
+        <label class="settings-toggle-row">
+          <Switch
+            checked={advancedTools}
+            onChange={onAdvancedToolsChange}
+          />
+          <div class="settings-toggle-row__info">
+            <span class="settings-toggle-row__title">Outils avancés</span>
+            <span class="settings-toggle-row__desc">Affiche les outils à usage limité ou spécialisé</span>
+          </div>
+        </label>
       </div>
       <div class="settings-section">
         <span class="settings-section__label">Zone dangereuse</span>
