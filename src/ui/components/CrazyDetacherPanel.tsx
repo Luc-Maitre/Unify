@@ -85,7 +85,7 @@ export function CrazyDetacherPanel({ onActionBar, onToast, onHome }: Props) {
       <div class="success-panel">
         <img class="success-icon" src={circleCheckIcon} width="120" height="120" alt="" />
         <h2 class="success-title">{detachedCount} composant{detachedCount > 1 ? 's' : ''} détaché{detachedCount > 1 ? 's' : ''}</h2>
-        <p class="success-desc">Le plan s'est passé sans encombres</p>
+        <p class="success-desc">Le plan s'est déroulé sans encombres</p>
       </div>
     );
   }
