@@ -23,21 +23,27 @@ interface Stats {
   totalSwapped: number;
   totalOpens: number;
   unlockedAchievements: Array<{ id: string; unlockedAt: string }>;
+  lightThemeUsed: boolean;
+  darkThemeUsed: boolean;
 }
 
-const ACHIEVEMENTS: { id: string; label: string; subtitle: string; threshold: number; metric: 'swaps' | 'opens' }[] = [
-  { id: 'first-swap',  label: 'Un bon début',    subtitle: 'Premier swap effectué',    threshold: 1,  metric: 'swaps' },
-  { id: 'open-5',     label: 'Tu reviens !',              subtitle: 'Déjà 5 ouvertures, ça commence bien.',   threshold: 5,  metric: 'opens' },
-  { id: 'open-20',    label: 'Addict (assumé)',           subtitle: '20 ouvertures, Unify entre dans tes habitudes.',              threshold: 20, metric: 'opens' },
-  { id: 'open-50',    label: "Sans Unify, c'est pas pareil", subtitle: '50 ouvertures, et toujours au rendez-vous.',                   threshold: 50, metric: 'opens' },
+type Metric = 'swaps' | 'opens' | 'advancedTools' | 'lightDark';
+
+const ACHIEVEMENTS: { id: string; label: string; subtitle: string; threshold: number; metric: Metric }[] = [
+  { id: 'first-swap',  label: 'Un bon début',              subtitle: 'Premier swap effectué',                        threshold: 1,  metric: 'swaps' },
+  { id: 'open-5',      label: 'Tu reviens !',              subtitle: 'Déjà 5 ouvertures, ça commence bien.',         threshold: 5,  metric: 'opens' },
+  { id: 'open-20',     label: 'Addict (assumé)',           subtitle: '20 ouvertures, Unify entre dans tes habitudes.', threshold: 20, metric: 'opens' },
+  { id: 'open-50',     label: "Sans Unify, c'est pas pareil", subtitle: '50 ouvertures, et toujours au rendez-vous.', threshold: 50, metric: 'opens' },
+  { id: 'expert',      label: 'Explorateur avancé',       subtitle: 'Outils avancés débloqués.',                    threshold: 1,  metric: 'advancedTools' },
+  { id: 'light-dark',  label: 'Jour... Nuit !',                 subtitle: 'Thème clair et sombre testés.',                threshold: 1,  metric: 'lightDark' },
 ];
 
 async function readStats(): Promise<Stats> {
   const stored = await figma.clientStorage.getAsync('stats') as Partial<Stats> | undefined;
-  return { totalSwapped: 0, totalOpens: 0, unlockedAchievements: [], ...(stored ?? {}) };
+  return { totalSwapped: 0, totalOpens: 0, unlockedAchievements: [], lightThemeUsed: false, darkThemeUsed: false, ...(stored ?? {}) };
 }
 
-async function checkAndUnlock(stats: Stats, metric: 'swaps' | 'opens', value: number): Promise<void> {
+async function checkAndUnlock(stats: Stats, metric: Metric, value: number): Promise<void> {
   const unlockedIds = stats.unlockedAchievements.map(u => u.id);
   const newlyUnlocked = ACHIEVEMENTS.filter(
     a => a.metric === metric && !unlockedIds.includes(a.id) && value >= a.threshold
@@ -214,7 +220,19 @@ figma.ui.onmessage = async (msg: {
   }
 
   if (msg.type === 'set-theme') {
-    if (msg.theme) await figma.clientStorage.setAsync('theme', msg.theme);
+    if (msg.theme) {
+      await figma.clientStorage.setAsync('theme', msg.theme);
+      if (msg.theme === 'light' || msg.theme === 'dark') {
+        const stats = await readStats();
+        if (msg.theme === 'light') stats.lightThemeUsed = true;
+        else stats.darkThemeUsed = true;
+        if (stats.lightThemeUsed && stats.darkThemeUsed) {
+          await checkAndUnlock(stats, 'lightDark', 1);
+        } else {
+          await figma.clientStorage.setAsync('stats', stats);
+        }
+      }
+    }
     return;
   }
 
@@ -227,6 +245,10 @@ figma.ui.onmessage = async (msg: {
   if (msg.type === 'set-advanced-tools') {
     const m = msg as { type: string; enabled: boolean };
     await figma.clientStorage.setAsync('advancedTools', m.enabled);
+    if (m.enabled) {
+      const stats = await readStats();
+      await checkAndUnlock(stats, 'advancedTools', 1);
+    }
     return;
   }
 

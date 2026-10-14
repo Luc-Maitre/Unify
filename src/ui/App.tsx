@@ -77,9 +77,10 @@ export function App() {
           if (prev.some(a => a.id === msg.id)) return prev;
           return [...prev, { id: msg.id, label: msg.label, subtitle: msg.subtitle, unlockedAt: msg.unlockedAt }];
         });
+        const toastDelay = (msg.id as string).startsWith('open-') || msg.id === 'first-swap' ? 3000 : 400;
         achievementTimer.current = setTimeout(() => {
           showAchievementToast({ id: msg.id, label: msg.label, subtitle: msg.subtitle });
-        }, 3000);
+        }, toastDelay);
       }
     }
     window.addEventListener('message', handleMessage);
